@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空产业数据服务平台</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="inspection-style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro">> 巡检大师</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧参数设置面板 -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <h3>巡检目标选择</h3>
+                    <div class="form-group">
+                        <label>选择方式</label>
+                        <select id="selection-mode">
+                            <option value="area">区域框选（如整个光伏电站）</option>
+                            <option value="single">单个设备选择（如一座铁塔）</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>已选目标</label>
+                        <input type="text" id="selected-target" placeholder="请在地图上选择目标" readonly>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>巡检类型选择</h3>
+                    <div class="inspection-options">
+                        <div class="inspection-option" data-type="1">
+                            <input type="radio" name="inspection-type" id="type1">
+                            <div>
+                                <label for="type1">类型1: 桥梁检测</label>
+                                <div class="inspection-info">替代高危人工作业，实现桥梁结构自动化、精细化巡检</div>
+                            </div>
+                        </div>
+                        <div class="inspection-option" data-type="2">
+                            <input type="radio" name="inspection-type" id="type2">
+                            <div>
+                                <label for="type2">类型2: 红外检测</label>
+                                <div class="inspection-info">发现肉眼不可见的热隐患，实现故障早期预警和定位</div>
+                            </div>
+                        </div>
+                        <div class="inspection-option" data-type="3">
+                            <input type="radio" name="inspection-type" id="type3">
+                            <div>
+                                <label for="type3">类型3: 新能源巡检</label>
+                                <div class="inspection-info">光伏电站与风电场大规模资产高效、标准化运维</div>
+                            </div>
+                        </div>
+                        <div class="inspection-option" data-type="4">
+                            <input type="radio" name="inspection-type" id="type4">
+                            <div>
+                                <label for="type4">类型4: 点云规划</label>
+                                <div class="inspection-info">基于高精度三维点云规划零碰撞、可精准复飞的贴面航线</div>
+                            </div>
+                        </div>
+                        <div class="inspection-option" data-type="5">
+                            <input type="radio" name="inspection-type" id="type5">
+                            <div>
+                                <label for="type5">类型5: 应急测绘</label>
+                                <div class="inspection-info">突发灾害现场快速态势感知和现场地图生成</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>精度与设备设置</h3>
+                    <div class="form-group">
+                        <label for="resolution">期望分辨率 (cm/像素)</label>
+                        <input type="number" id="resolution" min="1" max="50" value="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="drone-model">无人机型号</label>
+                        <select id="drone-model">
+                            <option value="dji-mavic3e">大疆 Mavic 3E</option>
+                            <option value="dji-m300">大疆 Matrice 300 RTK</option>
+                            <option value="dji-m350">大疆 Matrice 350 RTK</option>
+                            <option value="dji-m30">大疆 Matrice 30</option>
+                            <option value="custom">自定义型号</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-model">相机型号</label>
+                        <select id="camera-model">
+                            <option value="dji-h20t">大疆 H20T (多传感器)</option>
+                            <option value="dji-p1">大疆 P1 (全画幅航测相机)</option>
+                            <option value="dji-l1">大疆 L1 (激光雷达)</option>
+                            <option value="zenmuse-xt2">禅思 XT2 (热成像)</option>
+                            <option value="custom">自定义型号</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="generate-btn">生成巡检方案</button>
+                    <button class="btn btn-success" id="analyze-btn" disabled>AI分析影像</button>
+                </div>
+                
+                <div class="panel-section" id="upload-section" style="display: none;">
+                    <h3>上传巡检数据</h3>
+                    <div class="form-group">
+                        <label>上传采集的影像</label>
+                        <input type="file" id="image-upload" multiple accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>上传红外数据</label>
+                        <input type="file" id="thermal-upload" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>上传视频数据</label>
+                        <input type="file" id="video-upload" accept="video/*">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央地图工作区 -->
+            <div class="main-workspace">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button id="toggle-btn">进入选择模式</button>
+                    <button id="clear-selection">清除所选</button>
+                </div>
+            </div>
+            
+            <!-- 右侧输出面板 -->
+            <div class="right-panel">
+                <div class="tab-container">
+                    <div class="tab active" data-tab="output">巡检输出</div>
+                    <div class="tab" data-tab="analysis">分析结果</div>
+                    <div class="tab" data-tab="comparison">多期对比</div>
+                </div>
+                
+                <div class="tab-content active" id="output-tab">
+                    <div class="output-section">
+                        <h3>巡检输出</h3>
+                        <div class="output-item">
+                            <h4>专属飞行航线文件</h4>
+                            <p>基于航迹大师功能生成的专属飞行航线文件</p>
+                            <button class="btn btn-secondary">下载 .kmz 文件</button>
+                            <button class="btn btn-secondary">下载 .mission 文件</button>
+                        </div>
+                        
+                        <div class="output-item">
+                            <h4>3D可视化预览</h4>
+                            <p>基于航迹大师功能的3D航线预览</p>
+                            <div class="preview-container">
+                                3D 航线预览
+                            </div>
+                            <button class="btn btn-secondary">打开3D预览</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="analysis-tab">
+                    <div class="output-section">
+                        <h3>AI分析结果</h3>
+                        <div class="output-item">
+                            <h4>AI缺陷识别结果</h4>
+                            <p>平台利用AI算法自动分析采集的影像，定位并分类缺陷</p>
+                            <div class="ai-results">
+                                <div class="defect-item">
+                                    <span class="defect-type">光伏板热斑</span>
+                                    <span class="defect-severity severity-high">严重</span>
+                                </div>
+                                <div class="defect-item">
+                                    <span class="defect-type">表面污渍</span>
+                                    <span class="defect-severity severity-medium">中等</span>
+                                </div>
+                                <div class="defect-item">
+                                    <span class="defect-type">边框腐蚀</span>
+                                    <span class="defect-severity severity-low">轻微</span>
+                                </div>
+                                <div class="defect-item">
+                                    <span class="defect-type">连接线松动</span>
+                                    <span class="defect-severity severity-medium">中等</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary">导出识别结果</button>
+                        </div>
+                        
+                        <div class="output-item">
+                            <h4>缺陷标注文件</h4>
+                            <p>包含所有识别缺陷位置和类型的标注文件</p>
+                            <button class="btn btn-secondary">下载标注文件</button>
+                            <button class="btn btn-secondary">在地图上查看</button>
+                        </div>
+                        
+                        <div class="output-item">
+                            <h4>专业巡检报告</h4>
+                            <p>包含详细分析和建议的专业巡检报告</p>
+                            <div class="report-summary">
+                                <ul>
+                                    <li><span class="label">检测时间:</span> <span class="value">2024-04-15</span></li>
+                                    <li><span class="label">检测设备:</span> <span class="value">32台</span></li>
+                                    <li><span class="label">发现缺陷:</span> <span class="value">14处</span></li>
+                                    <li><span class="label">整体健康度:</span> <span class="value">87%</span></li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary">生成完整报告</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="comparison-tab">
+                    <div class="output-section">
+                        <h3>多期数据对比</h3>
+                        <div class="output-item">
+                            <h4>温度模型/热力图</h4>
+                            <p>红外检测生成的热力图和温度分布模型</p>
+                            <div class="preview-container">
+                                热力图预览
+                            </div>
+                            <button class="btn btn-secondary">查看热力图</button>
+                            <button class="btn btn-secondary">导出温度数据</button>
+                        </div>
+                        
+                        <div class="output-item">
+                            <h4>视频/影像投射</h4>
+                            <p>将巡检视频/影像投射到三维模型上进行播放和分析</p>
+                            <button class="btn btn-secondary">开始视频投射</button>
+                            <button class="btn btn-secondary">影像测图工具</button>
+                        </div>
+                        
+                        <div class="output-item">
+                            <h4>多期数据对比</h4>
+                            <p>对比不同时期的检测数据，分析变化趋势</p>
+                            <div class="comparison-container">
+                                <div class="comparison-item">2023-04</div>
+                                <div class="comparison-item">2024-04</div>
+                            </div>
+                            <input type="range" class="comparison-slider" min="0" max="100" value="50">
+                            <button class="btn btn-secondary">选择对比期</button>
+                            <button class="btn btn-primary">生成变化报告</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 初始化地图
+        const map = L.map('map').setView([39.9042, 116.4074], 13); // 默认北京中心
+        
+        // 添加地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+
+        let isSelectMode = false;
+        let mode = 'area';         // 当前模式
+  let startLatLng = null;    // 矩形起点
+  let tempRect = null;
+  let pointMarker = null;
+  let isDrawing = false;
+
+  const modeSelect = document.getElementById('selection-mode');
+  const clearBtn = document.getElementById('clear-selection');
+  
+const toggleBtn = document.getElementById('toggle-btn');
+
+ toggleBtn.addEventListener('click', () => {
+    isSelectMode = !isSelectMode;
+    toggleBtn.innerText = isSelectMode ? '退出选择模式' : '进入选择模式';
+
+    // 控制地图拖动
+    map.dragging[isSelectMode ? 'disable' : 'enable']();
+  });
+
+
+  // ===== 模式切换 =====
+  modeSelect.addEventListener('change', () => {
+    mode = modeSelect.value;
+
+    // 控制地图拖动（框选或点选时禁用）
+    /*if (mode === 'none') {
+      map.dragging.enable();
+    } else {
+      map.dragging.disable();
+    }*/
+  });
+
+  // ===== 框选模式 =====
+  map.on('mousedown', (e) => {
+    if (!isSelectMode||mode !== 'area') return;
+
+    isDrawing = true;
+    startLatLng = e.latlng;
+
+    // 如果已经有矩形，先删掉
+    if (tempRect) {
+      map.removeLayer(tempRect);
+      tempRect = null;
+    }
+    if(pointMarker){
+        map.removeLayer(pointMarker);
+        pointMarker=null;
+    }
+
+    map.on('mousemove', onMouseMove);
+  });
+
+  function onMouseMove(e) {
+    if (!isDrawing||!startLatLng) return;
+    const bounds = L.latLngBounds(startLatLng, e.latlng);
+
+    if (tempRect) {
+      tempRect.setBounds(bounds);
+    } else {
+      tempRect = L.rectangle(bounds, { color: "#0078ff", weight: 2 }).addTo(map);
+    }
+  }
+
+  map.on('mouseup', () => {
+    if (mode !== 'area') return;
+    if (!isDrawing) return;
+
+    isDrawing = false;
+    map.off('mousemove', onMouseMove);
+    startLatLng = null;
+
+  });
+
+  // ===== 点选模式 =====
+  map.on('click', (e) => {
+    if (mode !== 'single') return;
+    if (tempRect) {
+      map.removeLayer(tempRect);
+      tempRect = null;
+    }
+
+    if (pointMarker) map.removeLayer(pointMarker);
+    pointMarker = L.marker(e.latlng).addTo(map);
+    console.log('点击坐标：', e.latlng);
+  });
+
+  // ===== 清除 =====
+  clearBtn.onclick = () => {
+    if (tempRect) map.removeLayer(tempRect);
+    if (pointMarker) map.removeLayer(pointMarker);
+    tempRect = null;
+    pointMarker = null;
+  };
+
+        /*
+        // 绘制工具相关变量
+        let drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+        let currentSelectionMode = 'area';
+        
+        // 初始化选择控制
+        function initSelectionControl() {
+            // 简化版选择控制
+            map.on('click', function(e) {
+                if (currentSelectionMode === 'area') {
+                    // 简化版区域选择
+                    const bounds = [
+                        [e.latlng.lat - 0.005, e.latlng.lng - 0.005],
+                        [e.latlng.lat + 0.005, e.latlng.lng + 0.005]
+                    ];
+                    const rectangle = L.rectangle(bounds, {color: "#4dabf7", weight: 2, fillOpacity: 0.1});
+                    drawnItems.clearLayers();
+                    drawnItems.addLayer(rectangle);
+                    document.getElementById('selected-target').value = "区域 (" + bounds[0][0].toFixed(4) + ", " + bounds[0][1].toFixed(4) + ") 至 (" + bounds[1][0].toFixed(4) + ", " + bounds[1][1].toFixed(4) + ")";
+                } else if (currentSelectionMode === 'single') {
+                    // 单个设备选择
+                    const marker = L.marker(e.latlng).addTo(drawnItems);
+                    document.getElementById('selected-target').value = "设备位置 (" + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4) + ")";
+                    
+                    // 添加设备信息弹窗
+                    marker.bindPopup("设备编号: T-2024-001<br>类型: 光伏逆变器<br>状态: 运行中").openPopup();
+                }
+            });
+        }
+        
+        // 巡检类型选择交互
+        document.querySelectorAll('.inspection-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.inspection-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+        
+        // 选择模式切换
+        document.getElementById('select-area').addEventListener('click', function() {
+            setActiveSelectionButton('select-area');
+            currentSelectionMode = 'area';
+            document.getElementById('selection-mode').value = 'area';
+        });
+        
+        document.getElementById('select-single').addEventListener('click', function() {
+            setActiveSelectionButton('select-single');
+            currentSelectionMode = 'single';
+            document.getElementById('selection-mode').value = 'single';
+        });
+        
+        document.getElementById('clear-selection').addEventListener('click', function() {
+            drawnItems.clearLayers();
+            document.getElementById('selected-target').value = '';
+        });
+        
+        function setActiveSelectionButton(buttonId) {
+            document.querySelectorAll('.map-controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(buttonId).classList.add('active');
+        }
+        */
+
+        document.querySelectorAll('.inspection-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.inspection-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+            });
+        });
+
+        // 标签页切换
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // 更新激活的标签
+                document.querySelectorAll('.tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 显示对应的内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
+        
+        // 生成巡检方案按钮
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            // 模拟生成巡检方案
+            if (!tempRect&&!pointMarker) {
+                alert('请先在地图上选择巡检目标');
+                return;
+            }
+            
+            const selectedType = document.querySelector('.inspection-option.selected');
+            if (!selectedType) {
+                alert('请选择巡检类型');
+                return;
+            }
+            
+            // 显示上传区域
+            document.getElementById('upload-section').style.display = 'block';
+            
+            // 启用AI分析按钮
+            document.getElementById('analyze-btn').disabled = false;
+            
+            alert('巡检方案生成成功！请下载航线文件并执行巡检任务。');
+        });
+        
+        // AI分析按钮
+        document.getElementById('analyze-btn').addEventListener('click', function() {
+            // 检查是否已上传文件
+            const imageUpload = document.getElementById('image-upload');
+            if (imageUpload.files.length === 0) {
+                alert('请先上传采集的影像数据');
+                return;
+            }
+            
+            // 模拟AI分析过程
+            this.disabled = true;
+            this.innerHTML = '<span class="status-indicator status-processing"></span>分析中...';
+            
+            setTimeout(function() {
+                document.getElementById('analyze-btn').innerHTML = '<span class="status-indicator status-completed"></span>分析完成';
+                
+                // 切换到分析结果标签页
+                document.querySelector('.tab[data-tab="analysis"]').click();
+                
+                alert('AI分析完成！请在"分析结果"标签页查看详细报告。');
+            }, 3000);
+        });
+        /*
+        // 重置按钮
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            drawnItems.clearLayers();
+            document.getElementById('selected-target').value = '';
+            document.querySelectorAll('.inspection-option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.querySelector('input[type="radio"]').checked = false;
+            });
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('analyze-btn').disabled = true;
+            document.getElementById('analyze-btn').innerHTML = 'AI分析影像';
+        });*/
+        
+        // 初始化
+        //initSelectionControl();
+        
+        // 设置默认选择的类型
+        document.querySelector('.inspection-option[data-type="3"]').click();
+    </script>
+</body>
+</html>

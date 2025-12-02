@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空产业数据服务平台</title>
+    <link rel="stylesheet" type="text/css" href="standard-style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat">> 标准数据服务</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧共性产品服务 -->
+            <div class="left-panel">
+                <h2 class="panel-title">遥感共性产品</h2>
+                
+                <div class="product-category">
+                    <div class="category-title">
+                        <span class="category-icon">🛰️</span>
+                        <span>正射影像产品</span>
+                    </div>
+                    <ul class="product-list">
+                        <li class="product-item active">
+                            <div class="product-name">正射影像 (DOM)</div>
+                            <div class="product-desc">高分辨率、几何精度高、无畸变的地面影像，真实反映地表特征</div>
+                            <div class="product-meta">
+                                <span>分辨率: 0.5-2米</span>
+                                <span>全国覆盖</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">高分系列DOM</div>
+                            <div class="product-desc">基于高分卫星数据的正射影像产品</div>
+                            <div class="product-meta">
+                                <span>分辨率: 2-16米</span>
+                                <span>多期数据</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">
+                        <span class="category-icon">📊</span>
+                        <span>辐射基础变量</span>
+                    </div>
+                    <ul class="product-list">
+                        <li class="product-item">
+                            <div class="product-name">地表反射率 (ARD)</div>
+                            <div class="product-desc">分析即用数据，经过几何配准、辐射定标和大气校正</div>
+                            <div class="product-meta">
+                                <span>分辨率: 10米</span>
+                                <span>2014-2023</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">地表温度</div>
+                            <div class="product-desc">基于热红外数据的地表温度产品</div>
+                            <div class="product-meta">
+                                <span>分辨率: 100米</span>
+                                <span>日/月产品</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">
+                        <span class="category-icon">🌿</span>
+                        <span>植被生态系统</span>
+                    </div>
+                    <ul class="product-list">
+                        <li class="product-item">
+                            <div class="product-name">NDVI 植被指数</div>
+                            <div class="product-desc">归一化植被指数，反映植被覆盖度和生长状况</div>
+                            <div class="product-meta">
+                                <span>分辨率: 16米</span>
+                                <span>10天合成</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">EVI 增强植被指数</div>
+                            <div class="product-desc">改进的植被指数，减少大气和土壤背景影响</div>
+                            <div class="product-meta">
+                                <span>分辨率: 16米</span>
+                                <span>10天合成</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">LAI 叶面积指数</div>
+                            <div class="product-desc">单位地表面积上植物叶片总面积的一半</div>
+                            <div class="product-meta">
+                                <span>分辨率: 500米</span>
+                                <span>8天产品</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">
+                        <span class="category-icon">💧</span>
+                        <span>水资源与水环境</span>
+                    </div>
+                    <ul class="product-list">
+                        <li class="product-item">
+                            <div class="product-name">水体指数</div>
+                            <div class="product-desc">基于多光谱数据的水体识别与提取</div>
+                            <div class="product-meta">
+                                <span>分辨率: 10-30米</span>
+                                <span>动态监测</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">水质参数</div>
+                            <div class="product-desc">叶绿素a浓度、悬浮物浓度等水质指标</div>
+                            <div class="product-meta">
+                                <span>分辨率: 30米</span>
+                                <span>重点湖泊</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">
+                        <span class="category-icon">🏔️</span>
+                        <span>地表类型与土壤</span>
+                    </div>
+                    <ul class="product-list">
+                        <li class="product-item">
+                            <div class="product-name">土地利用/覆盖</div>
+                            <div class="product-desc">全国土地利用与土地覆盖分类产品</div>
+                            <div class="product-meta">
+                                <span>分辨率: 10-30米</span>
+                                <span>年度更新</span>
+                            </div>
+                        </li>
+                        <li class="product-item">
+                            <div class="product-name">土壤水分</div>
+                            <div class="product-desc">基于微波遥感的土壤水分含量监测</div>
+                            <div class="product-meta">
+                                <span>分辨率: 1公里</span>
+                                <span>日产品</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 中央地图区域 -->
+            <div class="map-area">
+                <div id="map"></div>
+                
+                <div class="map-controls">
+                    <button id="satellite-view" class="active">卫星影像</button>
+                    <button id="terrain-view">地形图</button>
+                    <button id="vector-view">矢量地图</button>
+                    <button id="clear-layers">清除叠加</button>
+                </div>
+                
+                <div class="layer-control">
+                    <div class="layer-title">数据图层</div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="dom-layer" checked>
+                        <label for="dom-layer">正射影像 (DOM)</label>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="ndvi-layer">
+                        <label for="ndvi-layer">植被指数 (NDVI)</label>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="landuse-layer">
+                        <label for="landuse-layer">土地利用</label>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="water-layer">
+                        <label for="water-layer">水体分布</label>
+                    </div>
+                    <div class="layer-item">
+                        <input type="checkbox" id="boundary-layer" checked>
+                        <label for="boundary-layer">行政边界</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧地图服务与智能处理 -->
+            <div class="right-panel">
+                <div class="subscription-section">
+                    <h3 class="subscription-title">
+                        <i class="fas fa-bell"></i> 数据订阅服务
+                    </h3>
+                    <p class="subscription-desc">订阅特定地点、特定时间的数据，选择API或SDK服务接口，定期获取最新数据。</p>
+                    
+                    <div class="form-group">
+                        <label for="subscription-area">订阅区域</label>
+                        <select id="subscription-area">
+                            <option value="">请选择订阅区域</option>
+                            <option value="beijing">北京市</option>
+                            <option value="shanghai">上海市</option>
+                            <option value="guangdong">广东省</option>
+                            <option value="jiangsu">江苏省</option>
+                            <option value="zhejiang">浙江省</option>
+                            <option value="custom">自定义区域</option>
+                        </select>
+                    </div>
+                    
+                    <div id="custom-area" style="display:none; margin-top:10px;">
+                        <label>请输入自定义区域（请严格按照省/市/县的格式输入）：</label>
+                        <input type="text" id="custom-input" placeholder="例如：四川省成都市">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subscription-product">数据产品</label>
+                        <select id="subscription-product">
+                            <option value="">请选择数据产品</option>
+                            <option value="dom">正射影像 (DOM)</option>
+                            <option value="ard">地表反射率 (ARD)</option>
+                            <option value="ndvi">植被指数 (NDVI)</option>
+                            <option value="landuse">土地利用/覆盖</option>
+                            <option value="temperature">地表温度</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="start-date">开始日期</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="end-date">结束日期</label>
+                            <input type="date" id="end-date">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>更新频率</label>
+                        <select id="update-frequency">
+                            <option value="daily">每日更新</option>
+                            <option value="weekly">每周更新</option>
+                            <option value="monthly">每月更新</option>
+                            <option value="quarterly">每季度更新</option>
+                            <option value="yearly">每年更新</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>服务接口类型</label>
+                        <div class="interface-options">
+                            <div class="interface-option active" data-interface="api">
+                                <div class="interface-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <div class="interface-name">API 接口</div>
+                            </div>
+                            <div class="interface-option" data-interface="sdk">
+                                <div class="interface-icon">
+                                    <i class="fas fa-cube"></i>
+                                </div>
+                                <div class="interface-name">SDK 开发包</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="subscription-btn" id="subscribe-btn">
+                        <i class="fas fa-check-circle"></i> 确认订阅
+                    </button>
+                    
+                    <p class="subscription-note">
+                        订阅后，系统将按照您选择的频率自动推送最新数据到您的服务接口。
+                        可随时在用户中心管理您的订阅设置。
+                    </p>
+                </div>
+               
+                <div class="service-section">
+                    <h3 class="section-title">地图服务</h3>
+                    <ul class="service-list">
+                        <li class="service-item active">
+                            <div class="service-icon">🛰️</div>
+                            <div class="service-info">
+                                <div class="service-name">卫星地图</div>
+                                <div class="service-desc">调用API获取卫星影像地图，含历史影像</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">🗺️</div>
+                            <div class="service-info">
+                                <div class="service-name">电子地图</div>
+                                <div class="service-desc">调用API访问电子地图服务，含全球注记与境界</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">📍</div>
+                            <div class="service-info">
+                                <div class="service-name">POI查询</div>
+                                <div class="service-desc">调用API获取所需POI数据信息，支持6种查询方式</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">🏔️</div>
+                            <div class="service-info">
+                                <div class="service-name">地形渲染地图</div>
+                                <div class="service-desc">调用API返回指定区域的地形瓦片地图</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">🔍</div>
+                            <div class="service-info">
+                                <div class="service-name">地理/逆地理编码</div>
+                                <div class="service-desc">位置名称与经纬度之间的相互转换</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">📐</div>
+                            <div class="service-info">
+                                <div class="service-name">高程服务</div>
+                                <div class="service-desc">Cesium地形数据量化网格，三维展示地表起伏</div>
+                            </div>
+                        </li>
+                        <li class="service-item">
+                            <div class="service-icon">🏛️</div>
+                            <div class="service-info">
+                                <div class="service-name">行政区划</div>
+                                <div class="service-desc">快速查找特定的行政区域信息</div>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="api-section">
+                        <div class="api-title">API接口服务</div>
+                        <div class="api-desc">通过标准API接口获取地图服务，支持多种数据格式和坐标系统</div>
+                        <button class="api-btn">查看API文档</button>
+                    </div>
+                </div>
+                
+                <div class="service-section">
+                    <h3 class="section-title">在线遥感影像智能处理</h3>
+                    <div class="processing-options">
+                        <div class="processing-option active">基础处理</div>
+                        <div class="processing-option">地理影像产品生产</div>
+                        <div class="processing-option">地理解译产品</div>
+                        <div class="processing-option">专题产品生产</div>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <div class="service-item">
+                            <div class="service-icon">🎛️</div>
+                            <div class="service-info">
+                                <div class="service-name">配准与校正 <span class="feature-badge">精准</span></div>
+                                <div class="service-desc">几何校正、辐射校正、大气校正</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">✂️</div>
+                            <div class="service-info">
+                                <div class="service-name">影像分割与镶嵌</div>
+                                <div class="service-desc">影像分割、镶嵌、匀光匀色</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🔄</div>
+                            <div class="service-info">
+                                <div class="service-name">超分辨率重建</div>
+                                <div class="service-desc">基于深度学习提升影像分辨率</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🏗️</div>
+                            <div class="service-info">
+                                <div class="service-name">三维模型生产</div>
+                                <div class="service-desc">DOM、DEM、DSM、三维模型、建筑物白模</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🤖</div>
+                            <div class="service-info">
+                                <div class="service-name">AI自动提取 <span class="feature-badge">智能</span></div>
+                                <div class="service-desc">自动提取飞机、舰船、水体、建筑、道路等</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">📈</div>
+                            <div class="service-info">
+                                <div class="service-name">变化检测</div>
+                                <div class="service-desc">多时相影像变化检测与分析</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🔋</div>
+                            <div class="service-info">
+                                <div class="service-name">光伏选址分析</div>
+                                <div class="service-desc">基于多源数据的太阳能电站选址评估</div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="service-icon">🛢️</div>
+                            <div class="service-info">
+                                <div class="service-name">油储分析</div>
+                                <div class="service-desc">石油储备设施监测与分析</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="api-section">
+                        <div class="api-title">智能处理服务</div>
+                        <div class="api-desc">基于云计算和AI技术，提供高效、精准的遥感影像智能处理</div>
+                        <button class="api-btn">开始处理任务</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+// 示例：当切换城市，打印当前选择（可删除）
+
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 初始化地图
+        const map = L.map('map').setView([39.9042, 116.4074], 10); // 默认北京中心
+        
+        // 添加地图图层
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; <a href="https://www.esri.com/">Esri</a>'
+        });
+        
+        // 地图视图切换
+        document.getElementById('satellite-view').addEventListener('click', function() {
+            map.removeLayer(osmLayer);
+            map.addLayer(satelliteLayer);
+            setActiveViewButton('satellite-view');
+        });
+        
+        document.getElementById('terrain-view').addEventListener('click', function() {
+            map.removeLayer(satelliteLayer);
+            map.addLayer(osmLayer);
+            setActiveViewButton('terrain-view');
+        });
+        
+        document.getElementById('vector-view').addEventListener('click', function() {
+            // 简化实现，实际应用中会加载矢量图层
+            alert('矢量地图视图加载中...');
+            setActiveViewButton('vector-view');
+        });
+        
+        document.getElementById('clear-layers').addEventListener('click', function() {
+            // 清除所有叠加图层
+            alert('已清除所有叠加图层');
+        });
+        
+        function setActiveViewButton(buttonId) {
+            document.querySelectorAll('.map-controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(buttonId).classList.add('active');
+        }
+        
+        // 产品选择交互
+        document.querySelectorAll('.product-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.product-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会加载对应的产品数据到地图
+                const productName = this.querySelector('.product-name').textContent;
+                alert(`已选择产品: ${productName}，正在加载数据...`);
+            });
+        });
+        
+        // 服务选择交互
+        document.querySelectorAll('.service-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.service-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会激活对应的服务功能
+                const serviceName = this.querySelector('.service-name').textContent;
+                console.log(`已选择服务: ${serviceName}`);
+            });
+        });
+        
+        // 处理选项交互
+        document.querySelectorAll('.processing-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.processing-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会显示对应的处理功能
+                const optionName = this.textContent;
+                console.log(`已选择处理类型: ${optionName}`);
+            });
+        });
+        
+        // 图层控制交互
+        document.querySelectorAll('.layer-item input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const layerName = this.id.replace('-layer', '');
+                if (this.checked) {
+                    console.log(`已启用图层: ${layerName}`);
+                } else {
+                    console.log(`已禁用图层: ${layerName}`);
+                }
+            });
+        });
+        
+        // API按钮交互
+        document.querySelectorAll('.api-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const section = this.closest('.api-section');
+                const title = section.querySelector('.api-title').textContent;
+                alert(`${title}功能将在完整版中实现`);
+            });
+        });
+
+        document.querySelectorAll('.interface-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.interface-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        const select = document.getElementById('subscription-area');
+  const customDiv = document.getElementById('custom-area');
+  const customInput = document.getElementById('custom-input');
+
+  select.addEventListener('change', () => {
+    if (select.value === 'custom') {
+      customDiv.style.display = 'block';
+    } else {
+      customDiv.style.display = 'none';
+      customInput.value = '';
+    }
+  });
+  
+        // 订阅按钮点击事件
+        document.getElementById('subscribe-btn').addEventListener('click', function() {
+            const area = document.getElementById('subscription-area').value;
+            const product = document.getElementById('subscription-product').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const frequency = document.getElementById('update-frequency').value;
+            const interfaceType = document.querySelector('.interface-option.active').getAttribute('data-interface');
+            if (!area || !product || !startDate || !endDate) {
+                alert('请填写完整的订阅信息');
+                return;
+            }
+            
+            // 在实际应用中，这里会提交订阅请求到服务器
+            const subscriptionData = {
+                area: area,
+                product: product,
+                startDate: startDate,
+                endDate: endDate,
+                frequency: frequency,
+                interfaceType: interfaceType
+            };
+            
+            console.log('订阅数据:', subscriptionData);
+            
+            alert(`数据订阅成功！\n\n订阅区域: ${area}\n数据产品: ${product}\n时间范围: ${startDate} 至 ${endDate}\n更新频率: ${frequency}\n服务接口: ${interfaceType.toUpperCase()}\n\n系统将按照您设置的频率自动推送数据。`);
+        });
+
+        const today = new Date();
+        const nextMonth = new Date(today);
+        nextMonth.setMonth(today.getMonth() + 1);
+        
+        document.getElementById('start-date').valueAsDate = today;
+        document.getElementById('end-date').valueAsDate = nextMonth;
+    </script>
+</body>
+</html>

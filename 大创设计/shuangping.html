@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双屏对比分析 - 低空云平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .platform-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            background-color: #1a2332;
+            color: white;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+            
+.top-navbar .form-group {
+    display: flex;
+    align-items: center;
+    margin: 0 0;
+    padding: 0;
+    gap: 10px;
+}
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4dabf7;
+}
+
+.plat {
+    font-size: 18px;
+    font-weight: bold;
+    color: #85c6fa;
+    gap:5px;
+}
+.sub-intro {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c3e4ff;
+    gap:5px;
+}
+        
+        .top-right-tools {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .notification-center, .user-settings {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-center:hover, .user-settings:hover {
+            background-color: #2d3748;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 左侧面板 */
+        .left-panel {
+            width: 300px;
+            background-color: white;
+            border-right: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1a2332;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .comparison-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+            color: #4dabf7;
+        }
+        
+        .mode-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .mode-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+        
+        .mode-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .mode-option.active {
+            background-color: #e7f5ff;
+            border-color: #4dabf7;
+            box-shadow: 0 2px 5px rgba(77, 171, 247, 0.2);
+        }
+        
+        .mode-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+            font-size: 18px;
+        }
+        
+        .mode-info {
+            flex: 1;
+        }
+        
+        .mode-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1a2332;
+        }
+        
+        .mode-desc {
+            font-size: 12px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .data-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group select:focus {
+            border-color: #4dabf7;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+        
+        .analysis-tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .analysis-tool {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            flex: 1;
+            min-width: 45%;
+            text-align: center;
+        }
+        
+        .analysis-tool:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .analysis-tool.active {
+            background-color: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #4dabf7;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #339af0;
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 中央工作区 */
+        .workspace {
+            flex: 1;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .comparison-container {
+            display: flex;
+            height: 100%;
+            position: relative;
+        }
+        
+        /* 双屏对比模式 */
+        .side-by-side {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .comparison-panel {
+            flex: 1;
+            position: relative;
+            background-color: #0f1419;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 10;
+        }
+        
+        .panel-content {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #868e96;
+        }
+        
+        .comparison-divider {
+            width: 4px;
+            background-color: #4dabf7;
+            cursor: col-resize;
+            position: relative;
+            z-index: 20;
+        }
+        
+        .comparison-divider::before {
+            content: "⋮";
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            width: 20px;
+            height: 20px;
+            background-color: #4dabf7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* 卷帘分析模式 */
+        .wipe-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .wipe-before, .wipe-after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        
+        .wipe-before {
+            background-color: #1a4a6b;
+            z-index: 1;
+        }
+        
+        .wipe-after {
+            background-color: #2d3748;
+            width: 50%;
+            z-index: 2;
+        }
+        
+        .wipe-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: #4dabf7;
+            cursor: col-resize;
+            z-index: 30;
+        }
+        
+        .wipe-handle::before {
+            content: "↔";
+            position: absolute;
+            top: 50%;
+            left: -8px;
+            width: 20px;
+            height: 20px;
+            background-color: #4dabf7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* 控制面板 */
+        .control-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .control-panel button {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .control-panel button.active {
+            background: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .difference-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 280px;
+        }
+        
+        .difference-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .difference-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .difference-label {
+            color: #6c757d;
+        }
+        
+        .difference-value {
+            color: #1a2332;
+            font-weight: 500;
+        }
+        
+        /* 右侧面板 */
+        .right-panel {
+            width: 350px;
+            background-color: white;
+            border-left: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .application-section {
+            margin-bottom: 25px;
+        }
+        
+        .application-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #1a2332;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .application-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .application-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .application-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .application-item.active {
+            border-color: #4dabf7;
+            background-color: #e7f5ff;
+        }
+        
+        .application-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+        }
+        
+        .application-info {
+            flex: 1;
+        }
+        
+        .application-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .application-desc {
+            font-size: 12px;
+            color: #868e96;
+            margin-top: 2px;
+        }
+        
+        .export-section {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .export-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .export-desc {
+            font-size: 12px;
+            color: #868e96;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .export-btn {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .export-btn:hover {
+            background-color: #339af0;
+        }
+        
+        .snapshot-section {
+            margin-top: 20px;
+        }
+        
+        .snapshot-btn {
+            background-color: #40c057;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .snapshot-btn:hover {
+            background-color: #37b24d;
+        }
+        
+        .change-detection {
+            margin-top: 20px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .change-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #856404;
+            font-weight: 500;
+        }
+        
+        .change-list {
+            list-style: none;
+        }
+        
+        .change-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+            font-size: 13px;
+            color: #856404;
+        }
+        
+        .change-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro" data-page="cloude.html">> 低空云平台 --双屏显示</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧面板 -->
+            <div class="left-panel">
+                <h2 class="panel-title">双屏对比分析</h2>
+                
+                <div class="comparison-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-columns"></i> 对比模式
+                    </h3>
+                    <div class="mode-options">
+                        <div class="mode-option active" data-mode="side-by-side">
+                            <div class="mode-icon">
+                                <i class="fas fa-columns"></i>
+                            </div>
+                            <div class="mode-info">
+                                <div class="mode-name">同步双屏对比</div>
+                                <div class="mode-desc">两个窗口并排显示，同步操作，实现像素级精准比对</div>
+                            </div>
+                        </div>
+                        <div class="mode-option" data-mode="wipe">
+                            <div class="mode-icon">
+                                <i class="fas fa-sliders-h"></i>
+                            </div>
+                            <div class="mode-info">
+                                <div class="mode-name">卷帘分析</div>
+                                <div class="mode-desc">通过拖动分割线直观对比同一位置的变化情况</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-database"></i> 数据选择
+                    </h3>
+                    <div class="form-group">
+                        <label for="before-data">前期数据</label>
+                        <select id="before-data">
+                            <option value="model-2023">凌云阁2023年模型</option>
+                            <option value="model-2022">凌云阁2022年模型</option>
+                            <option value="ortho-2023">2023年正射影像</option>
+                            <option value="ortho-2022">2022年正射影像</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="after-data">后期数据</label>
+                        <select id="after-data">
+                            <option value="model-2024">凌云阁2024年模型</option>
+                            <option value="model-2023">凌云阁2023年模型</option>
+                            <option value="ortho-2024">2024年正射影像</option>
+                            <option value="ortho-2023">2023年正射影像</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="data-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-ruler-combined"></i> 分析工具
+                    </h3>
+                    <div class="analysis-tools">
+                        <div class="analysis-tool active">距离测量</div>
+                        <div class="analysis-tool">面积测量</div>
+                        <div class="analysis-tool">体积测量</div>
+                        <div class="analysis-tool">高度测量</div>
+                        <div class="analysis-tool">变化检测</div>
+                        <div class="analysis-tool">差异渲染</div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="reset-btn">重置视图</button>
+                    <button class="btn btn-primary" id="compare-btn">开始对比</button>
+                </div>
+            </div>
+            
+            <!-- 中央工作区 -->
+            <div class="workspace">
+                <div class="comparison-container">
+                    <!-- 双屏对比模式 -->
+                    <div class="side-by-side" id="side-by-side">
+                        <div class="comparison-panel">
+                            <div class="panel-header">
+                                前期数据：凌云阁2023年模型
+                            </div>
+                            <div class="panel-content">
+                                三维模型加载区域 - 2023年数据
+                            </div>
+                        </div>
+                        <div class="comparison-divider"></div>
+                        <div class="comparison-panel">
+                            <div class="panel-header">
+                                后期数据：凌云阁2024年模型
+                            </div>
+                            <div class="panel-content">
+                                三维模型加载区域 - 2024年数据
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 卷帘分析模式 -->
+                    <div class="wipe-container" id="wipe-container" style="display: none;">
+                        <div class="wipe-before">
+                            <div>前期数据：凌云阁2023年模型</div>
+                        </div>
+                        <div class="wipe-after">
+                            <div>后期数据：凌云阁2024年模型</div>
+                        </div>
+                        <div class="wipe-handle"></div>
+                    </div>
+                    
+                    <!-- 控制面板 -->
+                    <div class="control-panel">
+                        <button id="sync-views" class="active">同步视图</button>
+                        <button id="toggle-overlay">显示差异</button>
+                        <button id="reset-camera">重置相机</button>
+                        <button id="toggle-grid">显示网格</button>
+                    </div>
+                    
+                    <!-- 差异信息 -->
+                    <div class="difference-overlay">
+                        <div class="difference-title">变化检测结果</div>
+                        <div class="difference-item">
+                            <span class="difference-label">检测到变化:</span>
+                            <span class="difference-value">3处</span>
+                        </div>
+                        <div class="difference-item">
+                            <span class="difference-label">最大变化:</span>
+                            <span class="difference-value">+0.85米</span>
+                        </div>
+                        <div class="difference-item">
+                            <span class="difference-label">变化面积:</span>
+                            <span class="difference-value">24.5 m²</span>
+                        </div>
+                        <div class="difference-item">
+                            <span class="difference-label">变化体积:</span>
+                            <span class="difference-value">18.7 m³</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 -->
+            <div class="right-panel">
+                <div class="application-section">
+                    <h3 class="application-title">应用场景</h3>
+                    <ul class="application-list">
+                        <li class="application-item active">
+                            <div class="application-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="application-info">
+                                <div class="application-name">违章建筑监测</div>
+                                <div class="application-desc">监测未经审批的建筑建设情况</div>
+                            </div>
+                        </li>
+                        <li class="application-item">
+                            <div class="application-icon">
+                                <i class="fas fa-hard-hat"></i>
+                            </div>
+                            <div class="application-info">
+                                <div class="application-name">施工进度监测</div>
+                                <div class="application-desc">跟踪工程项目的施工进展情况</div>
+                            </div>
+                        </li>
+                        <li class="application-item">
+                            <div class="application-icon">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <div class="application-info">
+                                <div class="application-name">地质灾害监测</div>
+                                <div class="application-desc">监测滑坡、沉降等地质灾害变化</div>
+                            </div>
+                        </li>
+                        <li class="application-item">
+                            <div class="application-icon">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                            <div class="application-info">
+                                <div class="application-name">设备损坏检测</div>
+                                <div class="application-desc">检测设备设施的损坏和老化情况</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="export-section">
+                    <div class="export-title">导出分析结果</div>
+                    <div class="export-desc">生成专业的对比分析报告，包含变化检测结果、测量数据和可视化图表。</div>
+                    <button class="export-btn">导出分析报告</button>
+                </div>
+                
+                <div class="snapshot-section">
+                    <button class="snapshot-btn">
+                        <i class="fas fa-camera"></i> 保存对比快照
+                    </button>
+                    <div style="font-size: 12px; color: #868e96; margin-top: 8px; text-align: center;">
+                        保存当前对比视图，可用于报告和演示
+                    </div>
+                </div>
+                
+                <div class="change-detection">
+                    <div class="change-title">检测到的变化</div>
+                    <ul class="change-list">
+                        <li class="change-item">西侧屋檐沉降：+0.85米</li>
+                        <li class="change-item">新增附属建筑：18.5平方米</li>
+                        <li class="change-item">屋顶结构变化：6.2平方米</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.sub-intro').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 模式选择交互
+        document.querySelectorAll('.mode-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.mode-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const mode = this.getAttribute('data-mode');
+                
+                // 切换对比模式
+                if (mode === 'side-by-side') {
+                    document.getElementById('side-by-side').style.display = 'flex';
+                    document.getElementById('wipe-container').style.display = 'none';
+                } else if (mode === 'wipe') {
+                    document.getElementById('side-by-side').style.display = 'none';
+                    document.getElementById('wipe-container').style.display = 'block';
+                }
+            });
+        });
+        
+        // 分析工具选择
+        document.querySelectorAll('.analysis-tool').forEach(tool => {
+            tool.addEventListener('click', function() {
+                document.querySelectorAll('.analysis-tool').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 应用场景选择
+        document.querySelectorAll('.application-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.application-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会加载对应的应用场景数据
+                const applicationName = this.querySelector('.application-name').textContent;
+                console.log(`已选择应用场景: ${applicationName}`);
+            });
+        });
+        
+        // 控制面板按钮交互
+        document.querySelectorAll('.control-panel button').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.id === 'sync-views') {
+                    // 切换同步视图状态
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        this.textContent = '异步视图';
+                    } else {
+                        this.classList.add('active');
+                        this.textContent = '同步视图';
+                    }
+                } else if (this.id === 'toggle-overlay') {
+                    // 切换差异显示
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                        this.textContent = '隐藏差异';
+                        document.querySelector('.difference-overlay').style.display = 'block';
+                    } else {
+                        this.classList.add('active');
+                        this.textContent = '显示差异';
+                        document.querySelector('.difference-overlay').style.display = 'none';
+                    }
+                } else {
+                    // 其他按钮的切换逻辑
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                    } else {
+                        this.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // 双屏对比分隔条交互
+        const comparisonDivider = document.querySelector('.comparison-divider');
+        const sideBySideContainer = document.querySelector('.side-by-side');
+        let isResizing = false;
+        
+        comparisonDivider.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            document.addEventListener('mousemove', handleResize);
+            document.addEventListener('mouseup', stopResize);
+        });
+        
+        function handleResize(e) {
+            if (!isResizing) return;
+            
+            const containerRect = sideBySideContainer.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const x = e.clientX - containerRect.left;
+            
+            // 限制在容器范围内
+            const newPosition = Math.max(10, Math.min(containerWidth - 10, x));
+            const percentage = (newPosition / containerWidth) * 100;
+            
+            comparisonDivider.style.left = `${percentage}%`;
+            
+            // 调整两侧面板宽度
+            const panels = sideBySideContainer.querySelectorAll('.comparison-panel');
+            panels[0].style.flex = `0 0 ${percentage}%`;
+            panels[1].style.flex = `0 0 ${100 - percentage}%`;
+        }
+        
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', handleResize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+        
+        // 卷帘分析交互
+        const wipeHandle = document.querySelector('.wipe-handle');
+        const wipeAfter = document.querySelector('.wipe-after');
+        let isWiping = false;
+        
+        wipeHandle.addEventListener('mousedown', function(e) {
+            isWiping = true;
+            document.addEventListener('mousemove', handleWipe);
+            document.addEventListener('mouseup', stopWipe);
+        });
+        
+        function handleWipe(e) {
+            if (!isWiping) return;
+            
+            const container = document.querySelector('.wipe-container');
+            const containerRect = container.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const x = e.clientX - containerRect.left;
+            
+            // 限制在容器范围内
+            const newWidth = Math.max(10, Math.min(containerWidth - 10, x));
+            const percentage = (newWidth / containerWidth) * 100;
+            
+            wipeAfter.style.width = `${percentage}%`;
+            wipeHandle.style.left = `${percentage}%`;
+        }
+        
+        function stopWipe() {
+            isWiping = false;
+            document.removeEventListener('mousemove', handleWipe);
+            document.removeEventListener('mouseup', stopWipe);
+        }
+        
+        // 开始对比按钮
+        document.getElementById('compare-btn').addEventListener('click', function() {
+            const beforeData = document.getElementById('before-data').value;
+            const afterData = document.getElementById('after-data').value;
+            
+            // 在实际应用中，这里会加载选中的数据并进行对比分析
+            console.log(`开始对比分析: ${beforeData} vs ${afterData}`);
+            
+            // 更新面板标题
+            document.querySelectorAll('.panel-header')[0].textContent = `前期数据：${getDataName(beforeData)}`;
+            document.querySelectorAll('.panel-header')[1].textContent = `后期数据：${getDataName(afterData)}`;
+            
+            document.querySelector('.wipe-before div').textContent = `前期数据：${getDataName(beforeData)}`;
+            document.querySelector('.wipe-after div').textContent = `后期数据：${getDataName(afterData)}`;
+            
+            alert('对比分析已开始，系统正在计算变化检测结果...');
+        });
+        
+        // 重置视图按钮
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            // 重置分隔条位置
+            comparisonDivider.style.left = '50%';
+            const panels = sideBySideContainer.querySelectorAll('.comparison-panel');
+            panels[0].style.flex = '0 0 50%';
+            panels[1].style.flex = '0 0 50%';
+            
+            // 重置卷帘位置
+            wipeAfter.style.width = '50%';
+            wipeHandle.style.left = '50%';
+            
+            alert('视图已重置');
+        });
+        
+        // 导出按钮
+        document.querySelector('.export-btn').addEventListener('click', function() {
+            alert('导出分析报告...\n\n在实际应用中，这里会生成包含变化检测结果、测量数据和可视化图表的专业报告。');
+        });
+        
+        // 快照按钮
+        document.querySelector('.snapshot-btn').addEventListener('click', function() {
+            alert('对比快照已保存！\n\n在实际应用中，这里会保存当前对比视图，可用于报告和演示。');
+        });
+        
+        // 辅助函数：获取数据名称
+        function getDataName(value) {
+            const dataMap = {
+                'model-2024': '凌云阁2024年模型',
+                'model-2023': '凌云阁2023年模型',
+                'model-2022': '凌云阁2022年模型',
+                'ortho-2024': '2024年正射影像',
+                'ortho-2023': '2023年正射影像',
+                'ortho-2022': '2022年正射影像'
+            };
+            
+            return dataMap[value] || value;
+        }
+    </script>
+</body>
+</html>

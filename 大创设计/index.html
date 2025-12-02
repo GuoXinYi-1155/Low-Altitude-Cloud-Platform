@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空产业数据服务平台</title>
+    <link rel="stylesheet" type="text/css" href="style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- 背景装饰元素 -->
+            <div class="bg-element bg-1"></div>
+            <div class="bg-element bg-2"></div>
+            <div class="bg-element bg-3"></div>
+            
+            <!-- 主标题区域 -->
+            <div class="hero-section">
+                <h1 class="hero-title">低空产业数据服务平台功能</h1>
+                <p class="hero-subtitle">一体化无人机数据采集、处理与分析解决方案，为各行各业提供精准、高效的遥感数据服务</p>
+            </div>
+            
+            <!-- 功能卡片区域 -->
+            <div class="cards-container">
+                <!-- 标准数据服务卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h2 class="card-title">标准数据服务</h2>
+                    <p class="card-desc">提供统一格式、坐标的遥感/地理数据，通过API、数据下载等方式提供标准化的遥感共性产品。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 正射影像(DOM)</li>
+                        <li><i class="fas fa-check"></i> 地表反射率(ARD)</li>
+                        <li><i class="fas fa-check"></i> 植被指数(NDVI)</li>
+                        <li><i class="fas fa-check"></i> 多源地图服务</li>
+                        <li><i class="fas fa-check"></i> 在线遥感影像智能处理</li>
+                    </ul>
+                    
+                    <button class="card-button" data-modal="standard-service">了解更多</button>
+                </div>
+                
+                <!-- 定制数据服务卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h2 class="card-title">定制数据服务</h2>
+                    <p class="card-desc">按客户的具体需求，专门采集、处理地理相关数据，并把数据定制成客户需要的格式。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 卫星遥感数据定制</li>
+                        <li><i class="fas fa-check"></i> 航空遥感数据采集</li>
+                        <li><i class="fas fa-check"></i> 三维数据建模</li>
+                        <li><i class="fas fa-check"></i> 矢量数据绘制</li>
+                        <li><i class="fas fa-check"></i> 多行业应用场景</li>
+                    </ul>
+                    
+                    <button class="card-button" data-modal="custom-service">了解更多</button>
+                </div>
+                
+                <!-- 数据平台工具卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h2 class="card-title">数据平台工具</h2>
+                    <p class="card-desc">一站式无人机应用解决方案，提供航线规划、行业巡检、数据处理与分析等专业工具。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 航迹大师 - 智能航线规划</li>
+                        <li><i class="fas fa-check"></i> 巡检大师 - 自动化设备检测</li>
+                        <li><i class="fas fa-check"></i> 低空云平台 - 一站式解决方案</li>
+                        <li><i class="fas fa-check"></i> 多源数据管理与可视化</li>
+                        <li><i class="fas fa-check"></i> 多期数据对比分析</li>
+                    </ul>
+                    
+                    <button class="card-button" data-modal="platform-tools">了解更多</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 标准数据服务模态框 -->
+    <div class="modal" id="standard-service-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">标准数据服务</h2>
+            <p class="modal-subtitle">统一格式、坐标的遥感/地理数据，通过API、数据下载等方式提供</p>
+            
+            <div class="modal-section">
+                <h3>什么是遥感共性产品？</h3>
+                <p>共性产品：指被<strong>两个及以上行业</strong>专题产品生产所需、且可被真实性检验的<strong>遥感产品</strong>，是连接标准产品与专题产品的关键桥梁，推动遥感数据向信息转化。</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>核心产品</h3>
+                <ul>
+                    <li><strong>正射影像(DOM)</strong> - 高分辨率、几何精度高、无畸变的地面影像</li>
+                    <li><strong>辐射基础变量(地表反射率ARD)</strong> - 分析即用数据，经过几何配准、辐射定标和大气校正</li>
+                    <li><strong>植被指数(如NDVI)</strong> - 衡量植被茂密程度的指标，用于农作物长势评估等</li>
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h3>服务优势</h3>
+                <ul>
+                    <li>时空特征捕捉 - 精确捕捉地表时空变化特征</li>
+                    <li>技术门槛降低 - 简化遥感数据应用流程</li>
+                    <li>节约处理成本 - 避免各行业部门对遥感数据的重复处理</li>
+                    <li>提升应用效率 - 加快数据到决策的转化速度</li>
+                    <li>高产品质量 - 遵循统一标准和流程处理</li>
+                    <li>广泛覆盖 - 满足不同区域和尺度需求</li>
+                </ul>
+            </div>
+            
+            <button class="modal-button" id="go-to-standard-service" data-page="standard-data.html">进入标准数据服务</button>
+        </div>
+    </div>
+    
+    <!-- 定制数据服务模态框 -->
+    <div class="modal" id="custom-service-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">定制数据服务</h2>
+            <p class="modal-subtitle">按客户的具体需求，专门采集、处理地理相关数据，定制成客户需要的格式</p>
+            
+            <div class="modal-section">
+                <h3>服务内涵</h3>
+                <p>定制数据服务就是<strong>按客户的具体需求，专门采集、处理地理相关数据，并把数据定制成客户需要的格式</strong>。</p>
+                <p>服务涵盖卫星遥感数据、航空遥感数据、三维数据、矢量数据、建筑白模数据等，实现地理信息的精准化、高效化应用。</p>
+            </div>
+            
+            <div class="modal-section">
+                <h3>数据采集与处理</h3>
+                <p>侧重"从原始数据到可用数据的全流程操作"，根据需求采集原始数据，并进行基础的整理和处理，形成初步可用的地理信息数据。</p>
+                <ul>
+                    <li>卫星遥感数据 - 分辨率最高可达0.3m</li>
+                    <li>航空遥感数据 - 通过飞机、无人机等平台获取</li>
+                    <li>三维数据 - 精准三维遥感数据采集、处理及定制化建模</li>
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h3>数据定制</h3>
+                <p>侧重"根据用户个性化需求，提供特定类型、格式或场景的数据成品"，是在采集与处理基础上的"精准化定制"。</p>
+                <ul>
+                    <li>矢量数据 - 精准绘制道路、水系、建筑等地理要素</li>
+                    <li>影像数据 - 高分辨率、精准定位的航空影像</li>
+                    <li>三维建模数据 - 精细化全国重点城市三维建筑白模</li>
+                    <li>栅格/矢量瓦片数据 - 高效加载、精细展示的瓦片数据</li>
+                    <li>地形数据 - 高精度地形模型，包括海拔、坡度等要素</li>
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h3>应用场景</h3>
+                <ul>
+                    <li>智慧城市数字底座</li>
+                    <li>自然资源及灾情监测</li>
+                    <li>地名地址服务应用</li>
+                    <li>地图开发工具应用</li>
+                </ul>
+            </div>
+            
+            <button class="modal-button" id="go-to-custom-service" data-page="customed-data.html">进入定制数据服务</button>
+        </div>
+    </div>
+    
+    <!-- 数据平台工具模态框 -->
+    <div class="modal" id="platform-tools-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">数据平台工具</h2>
+            <p class="modal-subtitle">一站式、全场景无人机应用解决方案平台</p>
+            
+            <div class="modal-section">
+                <h3>航迹大师</h3>
+                <p><strong>专业级、智能化的无人机航线规划软件</strong></p>
+                <p>解决复杂场景下，如何让无人机自动、高效、安全地采集到最优质的数据，以便后续生成高精度的实景三维模型或进行精细化的行业巡检。</p>
+                <ul>
+                    <li>环绕航线 - 针对实景三维建模优化</li>
+                    <li>立面航线 - 专门用于垂直表面的数据采集</li>
+                    <li>仿地航线 - 在起伏地形上保持固定高度飞行</li>
+                    <li>雷达航线 - 为无人机搭载激光雷达设计的飞行路径规划</li>
+                    <li>扫摆航线 - 相机在飞行过程中智能摆动，多角度采集</li>
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h3>巡检大师</h3>
+                <p><strong>面向特定行业的自动化、精细化设备设施巡检与分析平台</strong></p>
+                <p>实现从数据采集、处理到分析、报告生成的全套行业解决方案。</p>
+                <ul>
+                    <li>桥梁检测 - 替代高危人工作业，实现自动化巡检</li>
+                    <li>红外检测 - 发现肉眼不可见的热隐患</li>
+                    <li>新能源巡检 - 光伏电站与风电场大规模资产高效运维</li>
+                    <li>点云规划 - 基于高精度三维点云的定制化检测方案</li>
+                    <li>应急测绘 - 突发灾害现场的快速态势感知</li>
+                </ul>
+            </div>
+            
+            <div class="modal-section">
+                <h3>低空云平台</h3>
+                <p><strong>基于云计算的一站式、全场景无人机应用解决方案</strong></p>
+                <p>将无人机数据采集、管理、处理、分析、可视化及应用整合到一个统一的云端环境中，为用户提供闭环服务。</p>
+                <ul>
+                    <li>航线规划 - 简化版的航迹大师功能</li>
+                    <li>行业巡检 - 简化版的巡检大师，主要是视频处理</li>
+                    <li>数据空间 - 核心数据仓库与可视化中心</li>
+                    <li>双屏显示 - 专注于精准对比分析的可视化工具</li>
+                    <li>云服务 - 工具与资源获取，无线数据同步</li>
+                </ul>
+            </div>
+            
+            <button class="modal-button" id="go-to-platform-tools" data-page="platform.html">进入数据平台工具</button>
+        </div>
+    </div>
+
+    <script>
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.modal-button').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有模态框和按钮
+            const modals = {
+                'standard-service': document.getElementById('standard-service-modal'),
+                'custom-service': document.getElementById('custom-service-modal'),
+                'platform-tools': document.getElementById('platform-tools-modal')
+            };
+            
+            const buttons = document.querySelectorAll('.card-button');
+            const closeButtons = document.querySelectorAll('.close-modal');
+            
+            // 为每个卡片按钮添加点击事件
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modalId = this.getAttribute('data-modal');
+                    if (modals[modalId]) {
+                        modals[modalId].style.display = 'flex';
+                    }
+                });
+            });
+            
+            // 为关闭按钮添加点击事件
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    modal.style.display = 'none';
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                Object.values(modals).forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            
+            // 跳转按钮事件
+            document.getElementById('go-to-standard-service').addEventListener('click', function() {
+                alert('正在跳转到标准数据服务页面...');
+                // 实际应用中这里会跳转到对应页面
+                // window.location.href = 'standard-data-service.html';
+            });
+            
+            document.getElementById('go-to-custom-service').addEventListener('click', function() {
+                alert('正在跳转到定制数据服务页面...');
+                // 实际应用中这里会跳转到对应页面
+                // window.location.href = 'custom-data-service.html';
+            });
+            
+            document.getElementById('go-to-platform-tools').addEventListener('click', function() {
+                alert('正在跳转到数据平台工具页面...');
+                // 实际应用中这里会跳转到对应页面
+                // window.location.href = 'data-platform-tools.html';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据空间 - 低空云平台</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="data-style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro" data-page="cloude.html">> 低空云平台 --数据空间</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧数据管理面板 -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <h3>项目管理</h3>
+                    <div class="form-group">
+                        <label for="project-filter">项目筛选</label>
+                        <select id="project-filter">
+                            <option value="all">全部项目</option>
+                            <option value="recent">最近访问</option>
+                            <option value="shared">与我共享</option>
+                            <option value="archived">已归档</option>
+                        </select>
+                    </div>
+                    <div class="project-list">
+                        <div class="project-item selected">
+                            <div class="project-header">
+                                <div class="project-name">凌云阁2024年度巡检</div>
+                                <div class="project-date">2024-04-15</div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="status-indicator status-published"></span>已发布 · 12个数据文件
+                            </div>
+                        </div>
+                        <div class="project-item">
+                            <div class="project-header">
+                                <div class="project-name">西城区三维建模项目</div>
+                                <div class="project-date">2024-03-28</div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="status-indicator status-published"></span>已发布 · 24个数据文件
+                            </div>
+                        </div>
+                        <div class="project-item">
+                            <div class="project-header">
+                                <div class="project-name">光伏电站巡检_2024Q1</div>
+                                <div class="project-date">2024-03-10</div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="status-indicator status-published"></span>已发布 · 8个数据文件
+                            </div>
+                        </div>
+                        <div class="project-item">
+                            <div class="project-header">
+                                <div class="project-name">桥梁检测_2024-03</div>
+                                <div class="project-date">2024-03-05</div>
+                            </div>
+                            <div class="project-meta">
+                                <span class="status-indicator status-processing"></span>处理中 · 5个数据文件
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;">+ 新建项目</button>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>数据上传</h3>
+                    <div class="upload-area" id="upload-trigger">
+                        <div>点击或拖拽文件到此处</div>
+                        <p>支持实景三维模型、激光点云、航线文件等</p>
+                    </div>
+                    <input type="file" id="file-upload" multiple style="display: none;">
+                </div>
+                
+                <div class="panel-section">
+                    <h3>数据筛选</h3>
+                    <div class="form-group">
+                        <label for="data-type">数据类型</label>
+                        <select id="data-type">
+                            <option value="all">全部类型</option>
+                            <option value="model">三维模型</option>
+                            <option value="pointcloud">激光点云</option>
+                            <option value="ortho">正射影像</option>
+                            <option value="route">飞行航线</option>
+                            <option value="kml">KML标注</option>
+                            <option value="trajectory">飞行轨迹</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-range">时间范围</label>
+                        <select id="date-range">
+                            <option value="all">全部时间</option>
+                            <option value="week">最近一周</option>
+                            <option value="month">最近一月</option>
+                            <option value="quarter">最近一季度</option>
+                            <option value="year">最近一年</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中央工作区 -->
+            <div class="main-workspace">
+                <div class="workspace-container">
+                    <div class="workspace-tabs">
+                        <div class="workspace-tab active" data-tab="model">模型浏览</div>
+                        <div class="workspace-tab" data-tab="route">航线校验</div>
+                        <div class="workspace-tab" data-tab="compare">多期对比</div>
+                    </div>
+                    
+                    <div class="workspace-content">
+                        <!-- 模型浏览标签页 -->
+                        <div class="tab-content active" id="model-tab">
+                            <div class="scene-container">
+                                <div class="scene-controls">
+                                    <button id="view-3d" class="active">3D视图</button>
+                                    <button id="view-2d">2D视图</button>
+                                    <button id="measure-distance">距离测量</button>
+                                    <button id="measure-area">面积测量</button>
+                                    <button id="reset-view">重置视图</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #868e96;">
+                                    三维模型加载区域 - 可浏览实景三维模型、激光点云等重型数据
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 航线校验标签页 -->
+                        <div class="tab-content" id="route-tab">
+                            <div class="scene-container">
+                                <div class="scene-controls">
+                                    <button id="play-route" class="active">播放航线</button>
+                                    <button id="pause-route">暂停</button>
+                                    <button id="camera-view">相机视角</button>
+                                    <button id="collision-check">碰撞检测</button>
+                                    <button id="export-route">导出航线</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #868e96;">
+                                    航线模拟与校验区域 - 可模拟无人机飞行路径和相机视角
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 多期对比标签页 -->
+                        <div class="tab-content" id="compare-tab">
+                            <div class="scene-container">
+                                <div class="scene-controls">
+                                    <button id="compare-side" class="active">双屏对比</button>
+                                    <button id="compare-wipe">卷帘对比</button>
+                                    <button id="sync-views">同步视图</button>
+                                    <button id="export-compare">导出对比</button>
+                                </div>
+                                
+                                <!-- 双屏对比模式 -->
+                                <div class="comparison-container" id="side-comparison">
+                                    <div class="comparison-panel">
+                                        <div class="comparison-panel-header">
+                                            2023年数据
+                                        </div>
+                                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #868e96;">
+                                            左侧对比视图
+                                        </div>
+                                    </div>
+                                    <div class="comparison-divider"></div>
+                                    <div class="comparison-panel">
+                                        <div class="comparison-panel-header">
+                                            2024年数据
+                                        </div>
+                                        <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #868e96;">
+                                            右侧对比视图
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 卷帘对比模式 -->
+                                <div class="wipe-container" id="wipe-comparison" style="display: none;">
+                                    <div class="wipe-before" style="display: flex; justify-content: center; align-items: center; color: #868e96;">
+                                        2023年数据
+                                    </div>
+                                    <div class="wipe-after" style="display: flex; justify-content: center; align-items: center; color: #868e96;">
+                                        2024年数据
+                                    </div>
+                                    <div class="wipe-handle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧数据与工具面板 -->
+            <div class="right-panel">
+                <div class="panel-section">
+                    <h3>项目数据</h3>
+                    <div class="data-list">
+                        <div class="data-item selected">
+                            <div class="data-icon">3D</div>
+                            <div class="data-info">
+                                <div class="data-name">凌云阁实景三维模型</div>
+                                <div class="data-meta">2024-04-15 · 245 MB</div>
+                            </div>
+                            <div class="data-actions">
+                                <button title="分享">⎘</button>
+                                <button title="下载">⤓</button>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-icon">🛰</div>
+                            <div class="data-info">
+                                <div class="data-name">凌云阁正射影像</div>
+                                <div class="data-meta">2024-04-15 · 87 MB</div>
+                            </div>
+                            <div class="data-actions">
+                                <button title="分享">⎘</button>
+                                <button title="下载">⤓</button>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-icon">🛸</div>
+                            <div class="data-info">
+                                <div class="data-name">文化遗产精细化航线</div>
+                                <div class="data-meta">2024-04-15 · 1.2 MB</div>
+                            </div>
+                            <div class="data-actions">
+                                <button title="分享">⎘</button>
+                                <button title="下载">⤓</button>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">巡检分析报告</div>
+                                <div class="data-meta">2024-04-15 · 0.8 MB</div>
+                            </div>
+                            <div class="data-actions">
+                                <button title="分享">⎘</button>
+                                <button title="下载">⤓</button>
+                            </div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-icon">📏</div>
+                            <div class="data-info">
+                                <div class="data-name">激光点云数据</div>
+                                <div class="data-meta">2024-04-15 · 512 MB</div>
+                            </div>
+                            <div class="data-actions">
+                                <button title="分享">⎘</button>
+                                <button title="下载">⤓</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>测量工具</h3>
+                    <div class="tool-options">
+                        <div class="tool-btn active">距离</div>
+                        <div class="tool-btn">面积</div>
+                        <div class="tool-btn">高度</div>
+                        <div class="tool-btn">体积</div>
+                    </div>
+                    <div class="measurement-results">
+                        <h4>测量结果</h4>
+                        <ul>
+                            <li><span class="label">长度:</span> <span class="value">--</span></li>
+                            <li><span class="label">面积:</span> <span class="value">--</span></li>
+                            <li><span class="label">周长:</span> <span class="value">--</span></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h3>数据操作</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary">分享数据</button>
+                        <button class="btn btn-secondary">导出项目</button>
+                        <button class="btn btn-primary">发布模型</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.sub-intro').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 标签页切换
+        document.querySelectorAll('.workspace-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // 更新激活的标签
+                document.querySelectorAll('.workspace-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 显示对应的内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + '-tab').classList.add('active');
+                
+                // 特殊处理多期对比标签页的显示模式
+                if (tabId === 'compare') {
+                    document.getElementById('side-comparison').style.display = 'flex';
+                    document.getElementById('wipe-comparison').style.display = 'none';
+                }
+            });
+        });
+        
+        // 项目选择
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.project-item').forEach(i => {
+                    i.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // 数据项选择
+        document.querySelectorAll('.data-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.data-item').forEach(i => {
+                    i.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+        
+        // 工具按钮交互
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tool-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 场景控制按钮交互
+        document.querySelectorAll('.scene-controls button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.id === 'compare-side') {
+                    document.getElementById('side-comparison').style.display = 'flex';
+                    document.getElementById('wipe-comparison').style.display = 'none';
+                    document.querySelectorAll('.scene-controls button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                } else if (this.id === 'compare-wipe') {
+                    document.getElementById('side-comparison').style.display = 'none';
+                    document.getElementById('wipe-comparison').style.display = 'block';
+                    document.querySelectorAll('.scene-controls button').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                } else if (!this.id.includes('compare-')) {
+                    // 其他按钮的切换逻辑
+                    if (this.classList.contains('active')) {
+                        this.classList.remove('active');
+                    } else {
+                        document.querySelectorAll('.scene-controls button').forEach(b => {
+                            if (b !== this && !b.id.includes('compare-')) {
+                                b.classList.remove('active');
+                            }
+                        });
+                        this.classList.add('active');
+                    }
+                }
+            });
+        });
+        
+        // 上传区域点击触发文件选择
+        document.getElementById('upload-trigger').addEventListener('click', function() {
+            document.getElementById('file-upload').click();
+        });
+        
+        // 文件上传处理
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                alert(`已选择 ${e.target.files.length} 个文件准备上传`);
+                // 实际应用中这里会有文件上传逻辑
+            }
+        });
+        
+        // 卷帘对比交互
+        const wipeHandle = document.querySelector('.wipe-handle');
+        const wipeAfter = document.querySelector('.wipe-after');
+        let isResizing = false;
+        
+        wipeHandle.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', stopResize);
+        });
+        
+        function handleMouseMove(e) {
+            if (!isResizing) return;
+            
+            const container = document.querySelector('.wipe-container');
+            const containerRect = container.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const x = e.clientX - containerRect.left;
+            
+            // 限制在容器范围内
+            const newWidth = Math.max(10, Math.min(containerWidth - 10, x));
+            const percentage = (newWidth / containerWidth) * 100;
+            
+            wipeAfter.style.width = `${percentage}%`;
+            wipeHandle.style.left = `${percentage}%`;
+        }
+        
+        function stopResize() {
+            isResizing = false;
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', stopResize);
+        }
+        
+        // 双屏对比分隔条交互
+        const comparisonDivider = document.querySelector('.comparison-divider');
+        const comparisonContainer = document.querySelector('.comparison-container');
+        let isComparing = false;
+        
+        comparisonDivider.addEventListener('mousedown', function(e) {
+            isComparing = true;
+            document.addEventListener('mousemove', handleComparisonMove);
+            document.addEventListener('mouseup', stopComparison);
+        });
+        
+        function handleComparisonMove(e) {
+            if (!isComparing) return;
+            
+            const containerRect = comparisonContainer.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const x = e.clientX - containerRect.left;
+            
+            // 限制在容器范围内
+            const newPosition = Math.max(10, Math.min(containerWidth - 10, x));
+            const percentage = (newPosition / containerWidth) * 100;
+            
+            comparisonDivider.style.left = `${percentage}%`;
+            
+            // 调整两侧面板宽度
+            const panels = comparisonContainer.querySelectorAll('.comparison-panel');
+            panels[0].style.flex = `0 0 ${percentage}%`;
+            panels[1].style.flex = `0 0 ${100 - percentage}%`;
+        }
+        
+        function stopComparison() {
+            isComparing = false;
+            document.removeEventListener('mousemove', handleComparisonMove);
+            document.removeEventListener('mouseup', stopComparison);
+        }
+        
+        // 初始化
+        document.querySelector('.workspace-tab[data-tab="model"]').click();
+    </script>
+</body>
+</html>

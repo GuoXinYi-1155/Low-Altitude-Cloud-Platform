@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>航线规划 - 低空云平台</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .platform-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            background-color: #1a2332;
+            color: white;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+.top-navbar .form-group {
+    display: flex;
+    align-items: center;
+    margin: 0 0;
+    padding: 0;
+    gap: 10px;
+}
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4dabf7;
+}
+
+.plat {
+    font-size: 18px;
+    font-weight: bold;
+    color: #85c6fa;
+    gap:5px;
+}
+.sub-intro {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c3e4ff;
+    gap:5px;
+}
+
+        
+        .top-right-tools {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .notification-center, .user-settings {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-center:hover, .user-settings:hover {
+            background-color: #2d3748;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 左侧面板 */
+        .left-panel {
+            width: 320px;
+            background-color: white;
+            border-right: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1a2332;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .task-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+            color: #4dabf7;
+        }
+        
+        .template-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .template-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+        }
+        
+        .template-option:hover {
+            background-color: #e9ecef;
+        }
+        
+        .template-option.active {
+            background-color: #e7f5ff;
+            border-color: #4dabf7;
+            box-shadow: 0 2px 5px rgba(77, 171, 247, 0.2);
+        }
+        
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+            font-size: 18px;
+        }
+        
+        .template-info {
+            flex: 1;
+        }
+        
+        .template-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1a2332;
+        }
+        
+        .template-desc {
+            font-size: 12px;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4dabf7;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+        
+        .parameter-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .parameter-row .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #4dabf7;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #339af0;
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .btn-success {
+            background-color: #40c057;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #37b24d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 中央地图区域 */
+        .map-area {
+            flex: 1;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .map-controls button {
+            display: block;
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .map-controls button.active {
+            background: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .drawing-controls {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .drawing-controls button {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .drawing-controls button.active {
+            background: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .route-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 280px;
+        }
+        
+        .info-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .info-label {
+            color: #6c757d;
+        }
+        
+        .info-value {
+            color: #1a2332;
+            font-weight: 500;
+        }
+        
+        /* 右侧面板 */
+        .right-panel {
+            width: 350px;
+            background-color: white;
+            border-left: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .preview-section {
+            margin-bottom: 25px;
+        }
+        
+        .preview-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #1a2332;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .preview-container {
+            height: 200px;
+            background-color: #0f1419;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #868e96;
+            margin-bottom: 15px;
+        }
+        
+        .project-section {
+            margin-bottom: 25px;
+        }
+        
+        .project-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .project-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .project-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .project-item.selected {
+            border-color: #4dabf7;
+            background-color: #e7f5ff;
+        }
+        
+        .project-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+        }
+        
+        .project-info {
+            flex: 1;
+        }
+        
+        .project-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .project-meta {
+            font-size: 12px;
+            color: #868e96;
+            margin-top: 2px;
+        }
+        
+        .cloud-section {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .cloud-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .cloud-desc {
+            font-size: 12px;
+            color: #868e96;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .cloud-btn {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .cloud-btn:hover {
+            background-color: #339af0;
+        }
+        
+        .team-members {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .member {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-size: 12px;
+            color: #495057;
+        }
+        
+        .member.more {
+            background-color: #4dabf7;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro" data-page="cloude.html">> 低空云平台 --航迹大师</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧面板 -->
+            <div class="left-panel">
+                <h2 class="panel-title">航线规划</h2>
+                
+                <div class="task-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-layer-group"></i> 任务模式
+                    </h3>
+                    <div class="template-options">
+                        <div class="template-option active" data-template="cross-around">
+                            <div class="template-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div class="template-info">
+                                <div class="template-name">交叉环绕</div>
+                                <div class="template-desc">针对实景三维建模优化，交叉环绕采集建筑物纹理</div>
+                            </div>
+                        </div>
+                        <div class="template-option" data-template="facade">
+                            <div class="template-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="template-info">
+                                <div class="template-name">立面建模</div>
+                                <div class="template-desc">专门用于垂直表面数据采集，保持恒定距离和重叠率</div>
+                            </div>
+                        </div>
+                        <div class="template-option" data-template="area-scan">
+                            <div class="template-icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <div class="template-info">
+                                <div class="template-name">区域扫描</div>
+                                <div class="template-desc">在起伏地形上保持固定高度飞行，保证地面分辨率一致</div>
+                            </div>
+                        </div>
+                        <div class="template-option" data-template="linear">
+                            <div class="template-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <div class="template-info">
+                                <div class="template-name">线性路径</div>
+                                <div class="template-desc">沿线性特征（道路、河流等）采集数据</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-section">
+
+                    <h3>任务区域选择</h3>
+                    <div class="form-group">
+                        <label>绘制方式</label>
+                        <select id="draw-mode">
+                            <option value="rectangle">矩形框选</option>
+                           
+                            <option value="circle">圆形框选</option>
+                        </select>
+                    </div>
+
+                    <h3 class="section-title">
+                        <i class="fas fa-sliders-h"></i> 飞行参数
+                    </h3>
+                    <div class="form-group">
+                        <label for="flight-height">飞行高度 (米)</label>
+                        <input type="number" id="flight-height" value="100" min="30" max="500">
+                    </div>
+                    
+                    <div class="parameter-row">
+                        <div class="form-group">
+                            <label for="forward-overlap">航向重叠率 (%)</label>
+                            <input type="number" id="forward-overlap" value="80" min="60" max="90">
+                        </div>
+                        <div class="form-group">
+                            <label for="side-overlap">旁向重叠率 (%)</label>
+                            <input type="number" id="side-overlap" value="70" min="50" max="80">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="speed">飞行速度 (米/秒)</label>
+                        <input type="number" id="speed" value="5" min="1" max="15">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="camera-angle">相机角度 (°)</label>
+                        <select id="camera-angle">
+                            <option value="-90">-90° (垂直向下)</option>
+                            <option value="-75">-75°</option>
+                            <option value="-60">-60°</option>
+                            <option value="-45">-45°</option>
+                            <option value="-30">-30°</option>
+                            <option value="0">0° (水平)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="task-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-cog"></i> 设备设置
+                    </h3>
+                    <div class="form-group">
+                        <label for="drone-model">无人机型号</label>
+                        <select id="drone-model">
+                            <option value="dji-mavic3e">大疆 Mavic 3E</option>
+                            <option value="dji-m300">大疆 Matrice 300 RTK</option>
+                            <option value="dji-m350">大疆 Matrice 350 RTK</option>
+                            <option value="dji-m30">大疆 Matrice 30</option>
+                            <option value="custom">自定义型号</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="camera-model">相机型号</label>
+                        <select id="camera-model">
+                            <option value="dji-p1">大疆 P1 (全画幅航测相机)</option>
+                            <option value="dji-l1">大疆 L1 (激光雷达)</option>
+                            <option value="dji-h20t">大疆 H20T (多传感器)</option>
+                            <option value="zenmuse-x5s">禅思 X5S</option>
+                            <option value="custom">自定义型号</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="generate-btn">生成航线</button>
+                    <button class="btn btn-success" id="save-btn">保存项目</button>
+                </div>
+            </div>
+            
+            <!-- 中央地图区域 -->
+            <div class="map-area">
+                <div id="map"></div>
+                
+                <div class="map-controls">
+                    <button id="toggle-btn">进入框选模式</button>
+                    <button id="clear-all">清除所选</button>
+                    <button id="yes-btn" style="display:none;">完成多边形框选</button>
+                </div>
+                <!---
+                <div class="map-controls">
+                    <button id="view-3d" class="active">3D视图</button>
+                    <button id="view-2d">2D视图</button>
+                    <button id="simulate-flight">模拟飞行</button>
+                    <button id="export-route">导出航线</button>
+                </div>
+                -->
+                <div class="route-info">
+                    <div class="info-title">航线信息</div>
+                    <div class="info-item">
+                        <span class="info-label">航线长度:</span>
+                        <span class="info-value" id="route-length">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">预计飞行时间:</span>
+                        <span class="info-value" id="flight-time">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">拍照数量:</span>
+                        <span class="info-value" id="photo-count">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">覆盖面积:</span>
+                        <span class="info-value" id="coverage-area">--</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 -->
+            <div class="right-panel">
+                <div class="preview-section">
+                    <h3 class="preview-title">3D预览</h3>
+                    <div class="preview-container">
+                        航线3D预览区域
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%;">打开详细预览</button>
+                </div>
+                
+                <div class="project-section">
+                    <h3 class="preview-title">项目列表</h3>
+                    <ul class="project-list">
+                        <li class="project-item selected">
+                            <div class="project-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-name">凌云阁建模项目</div>
+                                <div class="project-meta">2024-04-15 · 交叉环绕航线</div>
+                            </div>
+                        </li>
+                        <li class="project-item">
+                            <div class="project-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-name">西城区道路巡检</div>
+                                <div class="project-meta">2024-04-10 · 线性路径</div>
+                            </div>
+                        </li>
+                        <li class="project-item">
+                            <div class="project-icon">
+                                <i class="fas fa-mountain"></i>
+                            </div>
+                            <div class="project-info">
+                                <div class="project-name">山区地形测绘</div>
+                                <div class="project-meta">2024-04-05 · 区域扫描</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;">+ 新建项目</button>
+                </div>
+                
+                <div class="cloud-section">
+                    <div class="cloud-title">云端协同</div>
+                    <div class="cloud-desc">所有规划好的航线都集中保存在云端项目中，团队成员可以随时访问、修改或一键下发至现场作业。</div>
+                    
+                    <div class="team-members">
+                        <div class="member">张</div>
+                        <div class="member">李</div>
+                        <div class="member">王</div>
+                        <div class="member more">+3</div>
+                    </div>
+                    
+                    <button class="cloud-btn" style="margin-top: 15px;">同步到云端</button>
+                    <button class="btn btn-secondary" style="width: 100%; margin-top: 10px;">下发到现场App</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.sub-intro').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 初始化地图
+        const map = L.map('map').setView([39.9042, 116.4074], 16); // 默认北京中心
+        
+        // 添加地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // 绘制工具相关变量
+        
+        let isSelectMode = false;
+        let mode = 'rectangle'; 
+let startLatLng = null;
+let tempRect = null;
+let tempShape = null;
+let isDrawing = false;
+let polygonPoints = [];
+  const drawnItems = [];
+const modeSelect = document.getElementById('draw-mode');
+const toggleBtn = document.getElementById('toggle-btn');
+const clearBtn = document.getElementById('clear-all');
+const finBtn=document.getElementById('yes-btn');
+let num=0;
+  toggleBtn.addEventListener('click', () => {
+    isSelectMode = !isSelectMode;
+    toggleBtn.innerText = isSelectMode ? '退出框选模式' : '进入框选模式';
+
+    // 控制地图拖动
+    map.dragging[isSelectMode ? 'disable' : 'enable']();
+  });
+
+  document.querySelectorAll('.template-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.template-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会根据选择的模板调整默认参数
+                const template = this.getAttribute('data-template');
+                console.log(`已选择模板: ${template}`);
+                
+                // 更新航线信息显示
+                updateRouteInfo(template);
+            });
+        });
+
+  modeSelect.addEventListener('change', () => {
+    mode = modeSelect.value;
+    if (mode === 'polygon') {
+      // 多边形单击添加点
+      document.getElementById('yes-btn').style.display = 'block';
+    }
+    else document.getElementById('yes-btn').style.display = 'none';
+    // 控制地图拖动（框选或点选时禁用）
+    /*if (mode === 'none') {
+      map.dragging.enable();
+    } else {
+      map.dragging.disable();
+    }*/
+  });
+
+  map.on('mousedown', (e) => {
+    if (!isSelectMode) return;
+
+
+    if (tempShape){
+        map.removeLayer(tempShape);
+        tempShape=null;
+    }
+
+    if (mode === 'polygon') {
+      // 多边形单击添加点
+      map.on('click', onPolygonClick);
+      return;
+    }
+
+    startLatLng = e.latlng;
+    isDrawing = true;
+
+    map.on('mousemove', onMouseMove);
+  });
+
+  // 鼠标移动
+  function onMouseMove(e) {
+    if (!isDrawing || !startLatLng) return;
+
+    if (mode === 'rectangle') {
+      const bounds = L.latLngBounds(startLatLng, e.latlng);
+      if (tempShape) tempShape.setBounds(bounds);
+      else tempShape = L.rectangle(bounds, {color: "#0078ff", weight: 2}).addTo(map);
+    } else if (mode === 'circle') {
+      const radius = map.distance(startLatLng, e.latlng);
+      if (tempShape) tempShape.setRadius(radius);
+      else tempShape = L.circle(startLatLng, {radius, color: "#0078ff", weight: 2}).addTo(map);
+    }
+  }
+
+  // 鼠标松开
+  map.on('mouseup', (e) => {
+    if (!isDrawing) return;
+    isDrawing = false;
+    map.off('mousemove', onMouseMove);
+
+    if (tempShape) {
+      drawnItems.push(tempShape);
+      if (mode === 'rectangle') {
+        const area = calcRectArea(tempShape.getBounds());
+        num=area/1e6;
+        //console.log('矩形面积:', area.toFixed(2), 'm²');
+      } else if (mode === 'circle') {
+        const r = tempShape.getRadius();
+        num=Math.PI * r * r/1e6;      //console.log('圆面积:', (Math.PI * r * r).toFixed(2), 'm²');
+      }
+    }
+  });
+function onPolygonClick(e) {
+    polygonPoints.push(e.latlng);
+
+    if (polygonPoints.length > 1) {
+      if (tempShape) tempShape.setLatLngs(polygonPoints);
+      else tempShape = L.polygon(polygonPoints, {color: 'green', weight: 2}).addTo(map);
+    }
+
+    // 点击完成
+    finBtn.addEventListener('click', () => {
+      if (polygonPoints.length > 2) {
+        const coords = polygonPoints.map(p => [p.lng, p.lat]);
+        const polygon = turf.polygon([[...coords, coords[0]]]);
+        const area = turf.area(polygon);
+        num=area/1e6;//console.log('多边形面积:', area.toFixed(2), 'm²');
+      }
+
+      drawnItems.push(tempShape);
+      cancelDrawing();
+    });
+  }
+
+  function cancelDrawing() {
+    isDrawing = false;
+    startLatLng = null;
+    polygonPoints = [];
+    map.off('mousemove', onMouseMove);
+    map.off('click', onPolygonClick);
+  }
+
+  function calcRectArea(bounds) {
+    const sw = bounds.getSouthWest();
+    const ne = bounds.getNorthEast();
+    const width = map.distance([sw.lat, sw.lng], [sw.lat, ne.lng]);
+    const height = map.distance([sw.lat, sw.lng], [ne.lat, sw.lng]);
+    return width * height;
+  }
+
+  clearBtn.addEventListener('click', () => {
+  // 清除图层
+  drawnItems.forEach(layer => map.removeLayer(layer));
+  drawnItems.length = 0;
+
+  // 清除当前临时图形
+  if (tempShape) {
+    map.removeLayer(tempShape);
+    tempShape = null;
+  }
+
+  // 清空状态
+  polygonPoints = [];
+  startLatLng = null;
+  isDrawing = false;
+
+  // 移除事件监听，防止残留
+  map.off('mousemove', onMouseMove);
+  map.off('click', onPolygonClick);
+  map.off('dblclick');
+
+  // 重置模式
+});
+       
+        
+        /*
+        // 地图视图切换
+        document.getElementById('view-3d').addEventListener('click', function() {
+            setActiveViewButton('view-3d');
+            alert('已切换到3D视图');
+        });
+        
+        document.getElementById('view-2d').addEventListener('click', function() {
+            setActiveViewButton('view-2d');
+            alert('已切换到2D视图');
+        });
+        
+        document.getElementById('simulate-flight').addEventListener('click', function() {
+            if (drawnItems.getLayers().length === 0) {
+                alert('请先绘制航线区域');
+                return;
+            }
+            alert('开始模拟飞行...');
+        });
+        */
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            if (!tempShape&&polygonPoints.length<3) {
+                alert('请先在地图上框选任务区域');
+                return;
+            }
+            alert('导出航线文件...');
+        });
+        
+        function setActiveViewButton(buttonId) {
+            document.querySelectorAll('.map-controls button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(buttonId).classList.add('active');
+        }
+        
+        // 项目选择交互
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.project-item').forEach(i => {
+                    i.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                // 在实际应用中，这里会加载选中的项目数据
+                const projectName = this.querySelector('.project-name').textContent;
+                console.log(`已选择项目: ${projectName}`);
+            });
+        });
+        
+        // 生成航线按钮
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            if (drawnItems.getLayers().length === 0) {
+                alert('请先在地图上绘制任务区域');
+                return;
+            }
+            
+            const selectedTemplate = document.querySelector('.template-option.active');
+            if (!selectedTemplate) {
+                alert('请选择任务模式');
+                return;
+            }
+            
+            // 获取参数
+            const height = document.getElementById('flight-height').value;
+            const forwardOverlap = document.getElementById('forward-overlap').value;
+            const sideOverlap = document.getElementById('side-overlap').value;
+            const speed = document.getElementById('speed').value;
+            const cameraAngle = document.getElementById('camera-angle').value;
+            
+            console.log(`生成航线参数: 高度=${height}m, 航向重叠=${forwardOverlap}%, 旁向重叠=${sideOverlap}%, 速度=${speed}m/s, 相机角度=${cameraAngle}°`);
+            
+            // 模拟生成航线
+            const bounds = [
+                [39.9022, 116.4052],
+                [39.9062, 116.4092]
+            ];
+            const rectangle = L.rectangle(bounds, {color: "#4dabf7", weight: 2, fillOpacity: 0.1});
+            drawnItems.clearLayers();
+            drawnItems.addLayer(rectangle);
+            
+            // 更新航线信息
+            updateRouteInfo(selectedTemplate.getAttribute('data-template'));
+            
+            alert('航线生成成功！');
+        });
+        
+        // 保存项目按钮
+        document.getElementById('save-btn').addEventListener('click', function() {
+            if (drawnItems.getLayers().length === 0) {
+                alert('请先生成航线');
+                return;
+            }
+            
+            const projectName = prompt('请输入项目名称:', '新建航线项目');
+            if (projectName) {
+                alert(`项目 "${projectName}" 已保存到云端`);
+            }
+        });
+        
+        
+        // 云端同步按钮
+        document.querySelector('.cloud-btn').addEventListener('click', function() {
+            if (drawnItems.getLayers().length === 0) {
+                alert('请先生成航线');
+                return;
+            }
+            alert('航线已同步到云端，团队成员现在可以访问和编辑此项目');
+        });
+        
+        // 更新航线信息显示
+        function updateRouteInfo(template) {
+            if (template === 'none') {
+                document.getElementById('route-length').textContent = '--';
+                document.getElementById('flight-time').textContent = '--';
+                document.getElementById('photo-count').textContent = '--';
+                document.getElementById('coverage-area').textContent = '--';
+                return;
+            }
+            
+            // 根据模板类型显示不同的航线信息
+            const infoMap = {
+                'cross-around': { length: '2.8 km', time: '25 min', photos: '156', area: '0.85 km²' },
+                'facade': { length: '1.5 km', time: '18 min', photos: '89', area: '--' },
+                'area-scan': { length: '3.2 km', time: '32 min', photos: '210', area: '1.2 km²' },
+                'linear': { length: '4.1 km', time: '41 min', photos: '245', area: '--' }
+            };
+            
+            const info = infoMap[template] || { length: '--', time: '--', photos: '--', area: '--' };
+            
+            document.getElementById('route-length').textContent = info.length;
+            document.getElementById('flight-time').textContent = info.time;
+            document.getElementById('photo-count').textContent = info.photos;
+            document.getElementById('coverage-area').textContent = info.area;
+        }
+        
+        // 初始化
+        updateRouteInfo('cross-around');
+        
+        // 绘制交互（简化实现）
+        map.on('click', function(e) {
+            if (currentDrawingMode === 'rectangle') {
+                // 简化版矩形绘制
+                const bounds = [
+                    [e.latlng.lat - 0.002, e.latlng.lng - 0.002],
+                    [e.latlng.lat + 0.002, e.latlng.lng + 0.002]
+                ];
+                const rectangle = L.rectangle(bounds, {color: "#4dabf7", weight: 2, fillOpacity: 0.1});
+                drawnItems.clearLayers();
+                drawnItems.addLayer(rectangle);
+                
+                // 更新航线信息
+                const selectedTemplate = document.querySelector('.template-option.active');
+                if (selectedTemplate) {
+                    updateRouteInfo(selectedTemplate.getAttribute('data-template'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>

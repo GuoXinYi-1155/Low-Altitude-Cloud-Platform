@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空产业数据服务平台</title>
+    <link rel="stylesheet" type="text/css" href="plat-style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat">> 数据平台工具</div>
+            </div>
+            <div class="form-group">
+                <label for="select-app">项目选择器:</label>
+                <select id="select-app">
+                    <option>凌云阁项目</option>
+                    <option>西城区项目</option>
+                    <option>光伏电站巡检项目</option>
+                </select>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧导航与数据面板 -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <h3>核心应用导航</h3>
+                    <div class="core-apps-nav">
+                        <div class="core-apps-btn" data-page="track-master.html">航迹大师</div>
+                        <div class="core-apps-btn" data-page="inspection-master.html">巡检大师</div>
+                        <div class="core-apps-btn" data-page="cloude.html">低空云平台</div>
+                    </div>
+                </div>
+                <div class="panel-section">
+                    <h3>项目数据树</h3>
+                    <ul class="data-tree">
+                        <li>凌云阁2024年度巡检</li>
+                        <li>西城区三维建模项目</li>
+                        <li>光伏电站巡检_2024Q1</li>
+                        <li>桥梁检测_2024-03</li>
+                        <li>历史项目归档</li>
+                    </ul>
+                </div>
+                <div class="panel-section">
+                    <h3>模型列表</h3>
+                    <ul class="data-tree">
+                        <li>凌云阁2023模型</li>
+                        <li>凌云阁2024模型</li>
+                        <li>西城区建筑白模</li>
+                        <li>地形高程模型</li>
+                    </ul>
+                </div>
+                <div class="panel-section">
+                    <h3>航线列表</h3>
+                    <ul class="data-tree">
+                        <li>文化遗产精细化建模</li>
+                        <li>立面贴近航线</li>
+                        <li>交叉环绕航线</li>
+                        <li>正射影像采集</li>
+                    </ul>
+                </div>
+                <div class="panel-section">
+                    <h3>报告列表</h3>
+                    <ul class="data-tree">
+                        <li>巡检报告_2024-04-15</li>
+                        <li>形变分析报告</li>
+                        <li>AI识别结果汇总</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 中央3D主视觉工作区 -->
+            <div class="main-workspace">
+                <div class="workspace-header">
+                    <h2>三维地球/模型场景</h2>
+                </div>
+                <div class="workspace-content">
+                    <div class="feature-overlay">
+                        功能叠加层（航线/标注/AI结果）
+                    </div>
+                    <div>三维场景加载中...</div>
+                </div>
+            </div>
+            
+            <!-- 右侧工具与属性面板 -->
+            <div class="right-panel">
+                
+                <div class="panel-section property-editor">
+                    <h3>属性编辑器</h3>
+                    <div class="form-group">
+                        <label for="model-opacity">模型透明度</label>
+                        <div class="slider-container">
+                            <input type="range" id="model-opacity" min="0" max="100" value="80">
+                            <span class="slider-value">80%</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="color-scheme">配色方案</label>
+                        <select id="color-scheme">
+                            <option>默认配色</option>
+                            <option>热力图配色</option>
+                            <option>高程配色</option>
+                            <option>红外配色</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="annotation-style">标注样式</label>
+                        <select id="annotation-style">
+                            <option>标准样式</option>
+                            <option>高亮样式</option>
+                            <option>简约样式</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="layer-visibility">图层可见性</label>
+                        <div>
+                            <input type="checkbox" id="terrain-layer" checked>
+                            <label for="terrain-layer">地形图层</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="building-layer" checked>
+                            <label for="building-layer">建筑图层</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="route-layer" checked>
+                            <label for="route-layer">航线图层</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="annotation-layer" checked>
+                            <label for="annotation-layer">标注图层</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.core-apps-btn').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        // 简单的交互功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 工具按钮切换
+            const toolButtons = document.querySelectorAll('.tool-btn');
+            toolButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    toolButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 滑动条数值显示
+            const opacitySlider = document.getElementById('model-opacity');
+            const sliderValue = document.querySelector('.slider-value');
+            
+            opacitySlider.addEventListener('input', function() {
+                sliderValue.textContent = this.value + '%';
+            });
+            
+            // 数据树项点击效果
+            const dataTreeItems = document.querySelectorAll('.data-tree li');
+            dataTreeItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    dataTreeItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
