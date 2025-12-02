@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空产业数据服务平台</title>
+    <link rel="stylesheet" type="text/css" href="custom-style.css"
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat">> 定制数据服务</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧应用场景列表 -->
+            <div class="left-panel">
+                <h2 class="panel-title">应用场景</h2>
+                <ul class="scenario-list">
+                    <li class="scenario-item active" data-scenario="smart-city">
+                        <div class="scenario-icon">🏙️</div>
+                        <div class="scenario-name">智慧城市数字底座</div>
+                        <div class="scenario-desc">为智慧城市建设提供遥感影像、矢量地图、POI等多源时空数据服务</div>
+                    </li>
+                    <li class="scenario-item" data-scenario="natural-resources">
+                        <div class="scenario-icon">🌳</div>
+                        <div class="scenario-name">自然资源及灾情监测</div>
+                        <div class="scenario-desc">提供标准、鲜活、分类详实的时空大数据服务，支持自然资源应急监测</div>
+                    </li>
+                    <li class="scenario-item" data-scenario="address-service">
+                        <div class="scenario-icon">📍</div>
+                        <div class="scenario-name">地名地址服务应用</div>
+                        <div class="scenario-desc">提供全球国家级、省级中英文地名以及POI数据，助力政企地名管理</div>
+                    </li>
+                    <li class="scenario-item" data-scenario="map-development">
+                        <div class="scenario-icon">🗺️</div>
+                        <div class="scenario-name">地图开发工具应用</div>
+                        <div class="scenario-desc">提供全球影像、矢量地图、地形等多源异构数据Web服务，降低开发成本</div>
+                    </li>
+                    <li class="scenario-item" data-scenario="precision-agriculture">
+                        <div class="scenario-icon">🌾</div>
+                        <div class="scenario-name">精准农业</div>
+                        <div class="scenario-desc">为现代农业提供高精度农田监测、作物长势评估、产量预测等数据服务</div>
+                    </li>
+                    <li class="scenario-item" data-scenario="environmental-protection">
+                        <div class="scenario-icon">🌍</div>
+                        <div class="scenario-name">环境保护</div>
+                        <div class="scenario-desc">支持水质监测、大气污染追踪、生态变化评估等环保应用</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 中央预览区域 -->
+            <div class="preview-area">
+                <div class="preview-placeholder" id="default-preview">
+                    <h2 class="preview-title">定制数据服务预览</h2>
+                    <p class="preview-desc">选择左侧的应用场景，查看相应的数据服务示例和定制方案。</p>
+                    <p class="preview-desc">我们提供卫星遥感数据、航空遥感数据、三维数据、矢量数据等多样化定制服务，满足您的个性化需求。</p>
+                </div>
+                
+                <img src="#" alt="智慧城市预览" class="preview-image" id="smart-city-preview">
+                <img src="#" alt="自然资源预览" class="preview-image" id="natural-resources-preview">
+                <img src="#" alt="地名地址预览" class="preview-image" id="address-service-preview">
+                <img src="#" alt="地图开发预览" class="preview-image" id="map-development-preview">
+                <img src="#" alt="精准农业预览" class="preview-image" id="precision-agriculture-preview">
+                <img src="#" alt="环境保护预览" class="preview-image" id="environmental-protection-preview">
+                
+                <div class="preview-controls">
+                    <button class="preview-btn">放大</button>
+                    <button class="preview-btn">缩小</button>
+                    <button class="preview-btn">重置视图</button>
+                </div>
+            </div>
+            
+            <!-- 右侧定制服务表单 -->
+            <div class="right-panel">
+                <h2 class="form-title">定制数据服务申请</h2>
+                <p class="form-subtitle">请填写您的需求，我们将为您提供专业的数据定制服务</p>
+                
+                <form id="custom-service-form">
+                    <div class="form-group">
+                        <label for="client-name">姓名/单位名称 *</label>
+                        <input type="text" id="client-name" required placeholder="请输入您的姓名或单位名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact-method">联系方式 *</label>
+                        <input type="text" id="contact-method" required placeholder="请输入电话或邮箱">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service-scenario">服务场景 *</label>
+                        <select id="service-scenario" required>
+                            <option value="">请选择服务场景</option>
+                            <option value="smart-city">智慧城市数字底座</option>
+                            <option value="natural-resources">自然资源及灾情监测</option>
+                            <option value="address-service">地名地址服务应用</option>
+                            <option value="map-development">地图开发工具应用</option>
+                            <option value="precision-agriculture">精准农业</option>
+                            <option value="environmental-protection">环境保护</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data-types">数据类型需求 *</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="satellite-data" name="data-types" value="satellite">
+                                <label for="satellite-data">卫星遥感数据</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="aerial-data" name="data-types" value="aerial">
+                                <label for="aerial-data">航空遥感数据</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="3d-data" name="data-types" value="3d">
+                                <label for="3d-data">三维数据</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="vector-data" name="data-types" value="vector">
+                                <label for="vector-data">矢量数据</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="terrain-data" name="data-types" value="terrain">
+                                <label for="terrain-data">地形数据</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="other-data" name="data-types" value="other">
+                                <label for="other-data">其他</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resolution">期望分辨率</label>
+                            <select id="resolution">
+                                <option value="">请选择分辨率</option>
+                                <option value="0.3m">0.3米</option>
+                                <option value="0.5m">0.5米</option>
+                                <option value="1m">1米</option>
+                                <option value="2m">2米</option>
+                                <option value="5m">5米</option>
+                                <option value="10m">10米</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="coverage">覆盖区域</label>
+                            <select id="coverage">
+                                <option value="">请选择区域</option>
+                                <option value="local">局部区域</option>
+                                <option value="city">城市范围</option>
+                                <option value="province">省级范围</option>
+                                <option value="national">全国范围</option>
+                                <option value="global">全球范围</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data-format">数据格式要求</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="format-tiff" name="data-format" value="tiff">
+                                <label for="format-tiff">TIFF</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="format-shapefile" name="data-format" value="shapefile">
+                                <label for="format-shapefile">Shapefile</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="format-kml" name="data-format" value="kml">
+                                <label for="format-kml">KML/KMZ</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="format-geojson" name="data-format" value="geojson">
+                                <label for="format-geojson">GeoJSON</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="format-other" name="data-format" value="other">
+                                <label for="format-other">其他</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timeline">项目时间要求</label>
+                        <select id="timeline">
+                            <option value="">请选择时间要求</option>
+                            <option value="urgent">紧急（1周内）</option>
+                            <option value="fast">快速（2-4周）</option>
+                            <option value="normal">常规（1-2个月）</option>
+                            <option value="flexible">时间灵活</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additional-info">补充说明/具体要求</label>
+                        <textarea id="additional-info" placeholder="请详细描述您的具体需求，包括应用场景、数据用途、特殊要求等"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">提交定制需求</button>
+                    
+                    <p class="form-note">
+                        提交后我们的专业团队将在24小时内与您联系，进一步沟通需求细节并提供定制方案。
+                        如有紧急需求，请直接致电 400-XXX-XXXX。
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        // 应用场景选择交互
+        document.querySelectorAll('.scenario-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 更新场景选择状态
+                document.querySelectorAll('.scenario-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 更新预览显示
+                const scenario = this.getAttribute('data-scenario');
+                document.getElementById('default-preview').style.display = 'none';
+                document.querySelectorAll('.preview-image').forEach(img => {
+                    img.classList.remove('active');
+                });
+                
+                const previewImg = document.getElementById(scenario + '-preview');
+                if (previewImg) {
+                    previewImg.classList.add('active');
+                } else {
+                    document.getElementById('default-preview').style.display = 'block';
+                }
+                
+                // 更新表单中的场景选择
+                document.getElementById('service-scenario').value = scenario;
+            });
+        });
+        
+        // 表单场景选择与左侧列表同步
+        document.getElementById('service-scenario').addEventListener('change', function() {
+            const selectedScenario = this.value;
+            if (selectedScenario) {
+                document.querySelectorAll('.scenario-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-scenario') === selectedScenario) {
+                        item.classList.add('active');
+                        
+                        // 更新预览显示
+                        document.getElementById('default-preview').style.display = 'none';
+                        document.querySelectorAll('.preview-image').forEach(img => {
+                            img.classList.remove('active');
+                        });
+                        
+                        const previewImg = document.getElementById(selectedScenario + '-preview');
+                        if (previewImg) {
+                            previewImg.classList.add('active');
+                        } else {
+                            document.getElementById('default-preview').style.display = 'block';
+                        }
+                    }
+                });
+            }
+        });
+        
+        // 表单提交处理
+        document.getElementById('custom-service-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 简单验证
+            const name = document.getElementById('client-name').value;
+            const contact = document.getElementById('contact-method').value;
+            const scenario = document.getElementById('service-scenario').value;
+            
+            if (!name || !contact || !scenario) {
+                alert('请填写必填字段（姓名/单位、联系方式和应用场景）');
+                return;
+            }
+            
+            // 收集表单数据
+            const formData = {
+                name: name,
+                contact: contact,
+                scenario: scenario,
+                dataTypes: Array.from(document.querySelectorAll('input[name="data-types"]:checked')).map(cb => cb.value),
+                resolution: document.getElementById('resolution').value,
+                coverage: document.getElementById('coverage').value,
+                formats: Array.from(document.querySelectorAll('input[name="data-format"]:checked')).map(cb => cb.value),
+                timeline: document.getElementById('timeline').value,
+                additionalInfo: document.getElementById('additional-info').value
+            };
+            
+            // 在实际应用中，这里应该发送数据到服务器
+            console.log('定制服务申请:', formData);
+            
+            // 显示成功消息
+            alert('定制服务申请已提交！我们的团队将在24小时内与您联系。');
+            
+            // 重置表单
+            this.reset();
+            
+            // 重置场景选择
+            document.querySelectorAll('.scenario-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.scenario-item[data-scenario="smart-city"]').classList.add('active');
+            document.getElementById('default-preview').style.display = 'block';
+            document.querySelectorAll('.preview-image').forEach(img => {
+                img.classList.remove('active');
+            });
+        });
+        
+        // 预览控制按钮（简化实现）
+        document.querySelectorAll('.preview-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('预览控制功能将在完整版中实现');
+            });
+        });
+    </script>
+</body>
+</html>

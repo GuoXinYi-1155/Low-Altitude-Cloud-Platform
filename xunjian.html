@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行业巡检 - 低空云平台</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .platform-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            background-color: #1a2332;
+            color: white;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+          
+.top-navbar .form-group {
+    display: flex;
+    align-items: center;
+    margin: 0 0;
+    padding: 0;
+    gap: 10px;
+}
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4dabf7;
+}
+
+.plat {
+    font-size: 18px;
+    font-weight: bold;
+    color: #85c6fa;
+    gap:5px;
+}
+.sub-intro {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c3e4ff;
+    gap:5px;
+}
+        
+        .top-right-tools {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .notification-center, .user-settings {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-center:hover, .user-settings:hover {
+            background-color: #2d3748;
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        /* 左侧面板 */
+        .left-panel {
+            width: 320px;
+            background-color: white;
+            border-right: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1a2332;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .task-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #495057;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 8px;
+            color: #4dabf7;
+        }
+        
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            border-color: #4dabf7;
+            background-color: #f8f9fa;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: #adb5bd;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .video-list {
+            list-style: none;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .video-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .video-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .video-item.active {
+            border-color: #4dabf7;
+            background-color: #e7f5ff;
+        }
+        
+        .video-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+        }
+        
+        .video-info {
+            flex: 1;
+        }
+        
+        .video-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .video-meta {
+            font-size: 12px;
+            color: #868e96;
+            margin-top: 2px;
+        }
+        
+        .tool-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tool-option {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            flex: 1;
+            min-width: 45%;
+            text-align: center;
+        }
+        
+        .tool-option:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .tool-option.active {
+            background-color: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .annotation-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .annotation-type {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .annotation-type:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .annotation-type.active {
+            background-color: #40c057;
+            color: white;
+            border-color: #40c057;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #4dabf7;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #4dabf7;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #339af0;
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .btn-success {
+            background-color: #40c057;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #37b24d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* 中央工作区 */
+        .workspace {
+            flex: 1;
+            background-color: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .workspace-tabs {
+            display: flex;
+            background-color: white;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .workspace-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .workspace-tab.active {
+            border-bottom: 2px solid #4dabf7;
+            color: #4dabf7;
+        }
+        
+        .workspace-content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-content {
+            display: none;
+            height: 100%;
+        }
+        
+        .tab-content.active {
+            display: flex;
+        }
+        
+        /* 视频地理投射 */
+        .video-geo-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .video-panel {
+            flex: 1;
+            background-color: #0f1419;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-controls button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .video-controls button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .video-progress {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .video-progress-filled {
+            position: absolute;
+            height: 100%;
+            background: #4dabf7;
+            border-radius: 3px;
+            width: 30%;
+        }
+        
+        .video-time {
+            color: white;
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .map-panel {
+            width: 40%;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        /* 视频内业测图 */
+        .video-annotation-container {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        
+        .annotation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .annotation-tools {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .annotation-tools button {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .annotation-tools button.active {
+            background: #4dabf7;
+            color: white;
+            border-color: #4dabf7;
+        }
+        
+        .defect-list {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 250px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .defect-item {
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .defect-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .defect-type {
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .defect-severity {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            margin-left: 8px;
+        }
+        
+        .severity-high {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .severity-medium {
+            background-color: #ffd43b;
+            color: #212529;
+        }
+        
+        .severity-low {
+            background-color: #51cf66;
+            color: white;
+        }
+        
+        .defect-time {
+            font-size: 12px;
+            color: #868e96;
+        }
+        
+        /* AI识别与可视化 */
+        .ai-results-container {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+        
+        .ai-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .ai-tag {
+            position: absolute;
+            background: rgba(255, 107, 107, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 20;
+        }
+        
+        .ai-tag:hover {
+            background: rgba(255, 107, 107, 1);
+        }
+        
+        .ai-results-panel {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .ai-result-item {
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .ai-result-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .ai-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .ai-result-type {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .ai-result-confidence {
+            font-size: 12px;
+            color: #868e96;
+        }
+        
+        .ai-result-desc {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        /* 增强现实叠加 */
+        .ar-container {
+            height: 100%;
+            width: 100%;
+            position: relative;
+            background-color: #0f1419;
+        }
+        
+        .ar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .ar-model {
+            width: 80%;
+            height: 80%;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .ar-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            z-index: 20;
+        }
+        
+        .ar-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .ar-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* 右侧面板 */
+        .right-panel {
+            width: 350px;
+            background-color: white;
+            border-left: 1px solid #e1e5e9;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        .inspection-section {
+            margin-bottom: 25px;
+        }
+        
+        .inspection-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #1a2332;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .inspection-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .inspection-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .inspection-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .inspection-item.active {
+            border-color: #4dabf7;
+            background-color: #e7f5ff;
+        }
+        
+        .inspection-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #495057;
+        }
+        
+        .inspection-info {
+            flex: 1;
+        }
+        
+        .inspection-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .inspection-meta {
+            font-size: 12px;
+            color: #868e96;
+            margin-top: 2px;
+        }
+        
+        .report-section {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .report-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .report-desc {
+            font-size: 12px;
+            color: #868e96;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .report-btn {
+            background-color: #4dabf7;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .report-btn:hover {
+            background-color: #339af0;
+        }
+        
+        .kml-section {
+            margin-top: 20px;
+        }
+        
+        .kml-btn {
+            background-color: #40c057;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .kml-btn:hover {
+            background-color: #37b24d;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro" data-page="cloude.html">> 低空云平台 --巡检大师</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧面板 -->
+            <div class="left-panel">
+                <h2 class="panel-title">行业巡检</h2>
+                
+                <div class="task-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-video"></i> 视频管理
+                    </h3>
+                    <div class="upload-area" id="upload-trigger">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">点击或拖拽视频文件到此处</div>
+                    </div>
+                    <input type="file" id="video-upload" accept="video/*" style="display: none;">
+                    
+                    <ul class="video-list">
+                        <li class="video-item active">
+                            <div class="video-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-name">桥梁巡检_20240415</div>
+                                <div class="video-meta">05:32 · 1080P · 245 MB</div>
+                            </div>
+                        </li>
+                        <li class="video-item">
+                            <div class="video-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-name">光伏电站巡检_20240410</div>
+                                <div class="video-meta">08:15 · 1080P · 387 MB</div>
+                            </div>
+                        </li>
+                        <li class="video-item">
+                            <div class="video-icon">
+                                <i class="fas fa-play-circle"></i>
+                            </div>
+                            <div class="video-info">
+                                <div class="video-name">电力线路巡检_20240405</div>
+                                <div class="video-meta">12:47 · 4K · 1.2 GB</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="task-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-tools"></i> 处理工具
+                    </h3>
+                    <div class="tool-options">
+                        <div class="tool-option active" data-tool="geo-projection">视频地理投射</div>
+                        <div class="tool-option" data-tool="annotation">视频内业测图</div>
+                        <div class="tool-option" data-tool="ai-recognition">AI识别与可视化</div>
+                        <div class="tool-option" data-tool="ar-overlay">增强现实叠加</div>
+                    </div>
+                </div>
+                
+                <div class="task-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-draw-polygon"></i> 标注类型
+                    </h3>
+                    <div class="annotation-types">
+                        <div class="annotation-type active" data-type="point">点标注</div>
+                        <div class="annotation-type" data-type="line">线标注</div>
+                        <div class="annotation-type" data-type="polygon">面标注</div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="defect-type">缺陷类型</label>
+                        <select id="defect-type">
+                            <option value="crack">裂纹</option>
+                            <option value="corrosion">锈蚀</option>
+                            <option value="hotspot">热斑</option>
+                            <option value="deformation">形变</option>
+                            <option value="damage">损坏</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="severity">严重程度</label>
+                        <select id="severity">
+                            <option value="low">轻微</option>
+                            <option value="medium">中等</option>
+                            <option value="high">严重</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="reset-btn">重置</button>
+                    <button class="btn btn-primary" id="analyze-btn">AI分析</button>
+                    <button class="btn btn-success" id="export-btn">导出报告</button>
+                </div>
+            </div>
+            
+            <!-- 中央工作区 -->
+            <div class="workspace">
+                <div class="workspace-tabs">
+                    <div class="workspace-tab active" data-tab="geo-projection">视频地理投射</div>
+                    <div class="workspace-tab" data-tab="annotation">视频内业测图</div>
+                    <div class="workspace-tab" data-tab="ai-recognition">AI识别与可视化</div>
+                    <div class="workspace-tab" data-tab="ar-overlay">增强现实叠加</div>
+                </div>
+                
+                <div class="workspace-content">
+                    <!-- 视频地理投射 -->
+                    <div class="tab-content active" id="geo-projection-tab">
+                        <div class="video-geo-container">
+                            <div class="video-panel">
+                                <video id="video-player" controls>
+                                    <source src="#" type="video/mp4">
+                                    您的浏览器不支持视频播放。
+                                </video>
+                                
+                                <div class="video-controls">
+                                    <button id="play-pause-btn">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <div class="video-progress">
+                                        <div class="video-progress-filled"></div>
+                                    </div>
+                                    <div class="video-time">00:00 / 00:00</div>
+                                    <button id="fullscreen-btn">
+                                        <i class="fas fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="map-panel">
+                                <div id="map"></div>
+                                <div class="map-overlay">
+                                    <div style="font-size: 14px; margin-bottom: 8px;">视频路径</div>
+                                    <div style="font-size: 12px; color: #6c757d;">视频帧与地图位置实时同步</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 视频内业测图 -->
+                    <div class="tab-content" id="annotation-tab">
+                        <div class="video-annotation-container">
+                            <video id="annotation-video" controls style="width: 100%; height: 100%; object-fit: contain;">
+                                <source src="#" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                            
+                            <canvas class="annotation-canvas" id="annotation-canvas"></canvas>
+                            
+                            <div class="annotation-tools">
+                                <button class="active" data-tool="point">点</button>
+                                <button data-tool="line">线</button>
+                                <button data-tool="polygon">面</button>
+                                <button data-tool="clear">清除</button>
+                            </div>
+                            
+                            <div class="defect-list">
+                                <div style="font-size: 14px; margin-bottom: 10px;">缺陷列表</div>
+                                <div class="defect-item">
+                                    <div class="defect-type">
+                                        裂纹
+                                        <span class="defect-severity severity-high">严重</span>
+                                    </div>
+                                    <div class="defect-time">00:32</div>
+                                </div>
+                                <div class="defect-item">
+                                    <div class="defect-type">
+                                        锈蚀
+                                        <span class="defect-severity severity-medium">中等</span>
+                                    </div>
+                                    <div class="defect-time">01:15</div>
+                                </div>
+                                <div class="defect-item">
+                                    <div class="defect-type">
+                                        热斑
+                                        <span class="defect-severity severity-low">轻微</span>
+                                    </div>
+                                    <div class="defect-time">02:47</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI识别与可视化 -->
+                    <div class="tab-content" id="ai-recognition-tab">
+                        <div class="ai-results-container">
+                            <video id="ai-video" controls style="width: 100%; height: 100%; object-fit: contain;">
+                                <source src="#" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                            
+                            <div class="ai-overlay" id="ai-overlay">
+                                <div class="ai-tag" style="top: 30%; left: 40%;">裂纹 (92%)</div>
+                                <div class="ai-tag" style="top: 50%; left: 60%;">锈蚀 (87%)</div>
+                                <div class="ai-tag" style="top: 70%; left: 35%;">热斑 (78%)</div>
+                            </div>
+                            
+                            <div class="ai-results-panel">
+                                <div style="font-size: 14px; margin-bottom: 10px;">AI识别结果</div>
+                                <div class="ai-result-item">
+                                    <div class="ai-result-header">
+                                        <div class="ai-result-type">裂纹</div>
+                                        <div class="ai-result-confidence">92%</div>
+                                    </div>
+                                    <div class="ai-result-desc">位于桥梁支座处，长度约15cm</div>
+                                </div>
+                                <div class="ai-result-item">
+                                    <div class="ai-result-header">
+                                        <div class="ai-result-type">锈蚀</div>
+                                        <div class="ai-result-confidence">87%</div>
+                                    </div>
+                                    <div class="ai-result-desc">位于钢结构连接处，面积约0.3m²</div>
+                                </div>
+                                <div class="ai-result-item">
+                                    <div class="ai-result-header">
+                                        <div class="ai-result-type">热斑</div>
+                                        <div class="ai-result-confidence">78%</div>
+                                    </div>
+                                    <div class="ai-result-desc">位于光伏板表面，温度异常升高</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 增强现实叠加 -->
+                    <div class="tab-content" id="ar-overlay-tab">
+                        <div class="ar-container">
+                            <video id="ar-video" controls style="width: 100%; height: 100%; object-fit: contain;">
+                                <source src="#" type="video/mp4">
+                                您的浏览器不支持视频播放。
+                            </video>
+                            
+                            <div class="ar-overlay" id="ar-overlay">
+                                <div class="ar-model">
+                                    三维模型叠加区域
+                                </div>
+                            </div>
+                            
+                            <div class="ar-controls">
+                                <button class="ar-btn" id="toggle-ar">切换AR视图</button>
+                                <button class="ar-btn" id="adjust-transparency">调整透明度</button>
+                                <button class="ar-btn" id="compare-mode">对比模式</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧面板 -->
+            <div class="right-panel">
+                <div class="inspection-section">
+                    <h3 class="inspection-title">巡检项目</h3>
+                    <ul class="inspection-list">
+                        <li class="inspection-item active">
+                            <div class="inspection-icon">
+                                <i class="fas fa-bridge"></i>
+                            </div>
+                            <div class="inspection-info">
+                                <div class="inspection-name">桥梁检测</div>
+                                <div class="inspection-meta">2024-04-15 · 3处缺陷</div>
+                            </div>
+                        </li>
+                        <li class="inspection-item">
+                            <div class="inspection-icon">
+                                <i class="fas fa-solar-panel"></i>
+                            </div>
+                            <div class="inspection-info">
+                                <div class="inspection-name">光伏电站巡检</div>
+                                <div class="inspection-meta">2024-04-10 · 5处缺陷</div>
+                            </div>
+                        </li>
+                        <li class="inspection-item">
+                            <div class="inspection-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="inspection-info">
+                                <div class="inspection-name">电力线路巡检</div>
+                                <div class="inspection-meta">2024-04-05 · 2处缺陷</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="report-section">
+                    <div class="report-title">巡检报告</div>
+                    <div class="report-desc">基于视频分析和AI识别结果，生成专业的巡检报告，包含缺陷位置、类型、严重程度和建议处理措施。</div>
+                    <button class="report-btn">生成巡检报告</button>
+                </div>
+                
+                <div class="kml-section">
+                    <button class="kml-btn">
+                        <i class="fas fa-download"></i> 导出KML文件
+                    </button>
+                    <div style="font-size: 12px; color: #868e96; margin-top: 8px; text-align: center;">
+                        导出包含缺陷位置信息的KML文件，可导入导航设备指导维修
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.sub-intro').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 初始化地图
+        const map = L.map('map').setView([39.9042, 116.4074], 15); // 默认北京中心
+        
+        // 添加地图图层
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+
+        document.querySelectorAll('.workspace-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // 更新激活的标签
+                document.querySelectorAll('.workspace-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 显示对应的内容
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId + '-tab').classList.add('active');
+                
+                
+            });
+        });
+
+        // 模拟视频路径
+        const pathCoordinates = [
+            [39.9022, 116.4052],
+            [39.9032, 116.4062],
+            [39.9042, 116.4072],
+            [39.9052, 116.4082],
+            [39.9062, 116.4092]
+        ];
+        
+        const path = L.polyline(pathCoordinates, {color: '#4dabf7', weight: 4}).addTo(map);
+        
+        // 工具选择交互
+        document.querySelectorAll('.tool-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.tool-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                const tool = this.getAttribute('data-tool');
+                
+                // 切换工作区标签页
+                document.querySelectorAll('.workspace-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`.workspace-tab[data-tab="${tool}"]`).classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${tool}-tab`).classList.add('active');
+            });
+        });
+        
+        // 标注类型选择
+        document.querySelectorAll('.annotation-type').forEach(type => {
+            type.addEventListener('click', function() {
+                document.querySelectorAll('.annotation-type').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // 视频选择交互
+        document.querySelectorAll('.video-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.video-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会加载选中的视频
+                const videoName = this.querySelector('.video-name').textContent;
+                console.log(`已选择视频: ${videoName}`);
+            });
+        });
+        
+        // 巡检项目选择
+        document.querySelectorAll('.inspection-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.inspection-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会加载选中的巡检项目
+                const inspectionName = this.querySelector('.inspection-name').textContent;
+                console.log(`已选择巡检项目: ${inspectionName}`);
+            });
+        });
+        
+        // 上传功能
+        document.getElementById('upload-trigger').addEventListener('click', function() {
+            document.getElementById('video-upload').click();
+        });
+        
+        document.getElementById('video-upload').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                alert(`已选择视频文件: ${fileName}\n\n在实际应用中，这里会上传视频到服务器进行处理。`);
+            }
+        });
+        
+        // 视频控制
+        const videoPlayer = document.getElementById('video-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const videoProgress = document.querySelector('.video-progress');
+        const videoProgressFilled = document.querySelector('.video-progress-filled');
+        const videoTime = document.querySelector('.video-time');
+        
+        playPauseBtn.addEventListener('click', function() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                videoPlayer.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        videoPlayer.addEventListener('timeupdate', function() {
+            const percent = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            videoProgressFilled.style.width = `${percent}%`;
+            
+            const currentTime = formatTime(videoPlayer.currentTime);
+            const duration = formatTime(videoPlayer.duration);
+            videoTime.textContent = `${currentTime} / ${duration}`;
+            
+            // 模拟视频地理投射 - 随着视频播放移动地图标记
+            const progressIndex = Math.floor((videoPlayer.currentTime / videoPlayer.duration) * (pathCoordinates.length - 1));
+            if (progressIndex >= 0 && progressIndex < pathCoordinates.length) {
+                map.setView(pathCoordinates[progressIndex], 16);
+            }
+        });
+        
+        videoProgress.addEventListener('click', function(e) {
+            const clickX = e.offsetX;
+            const width = this.offsetWidth;
+            const percent = clickX / width;
+            videoPlayer.currentTime = percent * videoPlayer.duration;
+        });
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // 标注工具交互
+        const annotationTools = document.querySelectorAll('.annotation-tools button');
+        annotationTools.forEach(tool => {
+            tool.addEventListener('click', function() {
+                if (this.getAttribute('data-tool') === 'clear') {
+                    // 清除所有标注
+                    const canvas = document.getElementById('annotation-canvas');
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                } else {
+                    annotationTools.forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // AI分析按钮
+        document.getElementById('analyze-btn').addEventListener('click', function() {
+            alert('开始AI分析...\n\n在实际应用中，这里会将视频发送到云端AI算法进行分析，识别缺陷并标注。');
+            
+            // 模拟AI分析结果
+            setTimeout(function() {
+                alert('AI分析完成！已识别出3处缺陷，并在视频和地图上标注。');
+            }, 2000);
+        });
+        
+        // 导出按钮
+        document.getElementById('export-btn').addEventListener('click', function() {
+            alert('导出巡检报告和KML文件...\n\n在实际应用中，这里会生成包含所有缺陷信息的专业报告和KML文件。');
+        });
+        
+        // 重置按钮
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            if (confirm('确定要重置所有标注和分析结果吗？')) {
+                // 清除所有标注
+                const canvas = document.getElementById('annotation-canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 重置AI标签
+                document.querySelectorAll('.ai-tag').forEach(tag => {
+                    tag.remove();
+                });
+                
+                alert('已重置所有标注和分析结果。');
+            }
+        });
+        
+        // 增强现实控制
+        document.getElementById('toggle-ar').addEventListener('click', function() {
+            const arOverlay = document.getElementById('ar-overlay');
+            if (arOverlay.style.display === 'none') {
+                arOverlay.style.display = 'flex';
+                this.textContent = '隐藏AR视图';
+            } else {
+                arOverlay.style.display = 'none';
+                this.textContent = '显示AR视图';
+            }
+        });
+        
+        // 初始化
+        videoTime.textContent = '00:00 / 00:00';
+        
+        // 设置Canvas尺寸
+        window.addEventListener('load', function() {
+            const canvas = document.getElementById('annotation-canvas');
+            const video = document.getElementById('annotation-video');
+            
+            // 在实际应用中，这里会根据视频尺寸动态调整Canvas大小
+            canvas.width = video.offsetWidth;
+            canvas.height = video.offsetHeight;
+        });
+    </script>
+</body>
+</html>

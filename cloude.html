@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>低空云平台 - 主页面</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2332 0%, #2d3b55 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .platform-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            background-color: rgba(26, 35, 50, 0.9);
+            color: white;
+            padding: 0 30px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 100;
+        }
+           
+.top-navbar .form-group {
+    display: flex;
+    align-items: center;
+    margin: 0 0;
+    padding: 0;
+    gap: 10px;
+}
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4dabf7;
+}
+
+.plat {
+    font-size: 18px;
+    font-weight: bold;
+    color: #85c6fa;
+    gap:5px;
+}
+.sub-intro {
+    font-size: 18px;
+    font-weight: bold;
+    color: #c3e4ff;
+    gap:5px;
+}
+
+        .top-right-tools {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .notification-center, .user-settings {
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-center:hover, .user-settings:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+        
+        .hero-section {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 60px;
+            z-index: 10;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #4dabf7, #40c057);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+            color: #adb5bd;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            z-index: 10;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 350px;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 40px rgba(77, 171, 247, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #4dabf7;
+            text-align: center;
+        }
+        
+        .card-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .card-desc {
+            font-size: 16px;
+            color: #ced4da;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+        
+        .card-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .card-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-features li i {
+            color: #40c057;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .card-button {
+            background: linear-gradient(90deg, #4dabf7, #339af0);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .card-button:hover {
+            background: linear-gradient(90deg, #339af0, #228be6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(51, 154, 240, 0.4);
+        }
+        
+        /* 背景装饰元素 */
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(77, 171, 247, 0.1);
+            z-index: 1;
+        }
+        
+        .bg-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .bg-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 8%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+        
+        .bg-3 {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 15%;
+            animation: float 12s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1100px) {
+            .cards-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .card {
+                width: 90%;
+                max-width: 500px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .top-navbar {
+                padding: 0 15px;
+            }
+            
+            .logo {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-container">
+        <!-- 顶部导航栏 -->
+        <div class="top-navbar">
+            <div class="form-group">
+                <div class="logo" data-page="index.html">低空产业数据服务平台</div>
+                <div class="plat" data-page="platform.html">> 数据平台工具</div>
+                <div class="sub-intro" data-page="cloude.html">> 低空云平台</div>
+            </div>
+            <div class="top-right-tools">
+                <div class="notification-center">消息/通知中心</div>
+                <div class="user-settings">用户设置</div>
+            </div>
+        </div>
+        
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 背景装饰元素 -->
+            <div class="bg-element bg-1"></div>
+            <div class="bg-element bg-2"></div>
+            <div class="bg-element bg-3"></div>
+            
+            <!-- 主标题区域 -->
+            <div class="hero-section">
+                <h1 class="hero-title">低空云平台核心功能</h1>
+                <p class="hero-subtitle">一体化无人机数据采集、处理与分析解决方案，为各行各业提供精准、高效的遥感数据服务</p>
+            </div>
+            
+            <!-- 功能卡片区域 -->
+            <div class="cards-container">
+                <!-- 航迹大师卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h2 class="card-title">航迹大师</h2>
+                    <p class="card-desc">专业级、智能化的无人机航线规划软件，解决复杂场景下无人机自动、高效、安全采集数据的问题。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 多种航线模式选择</li>
+                        <li><i class="fas fa-check"></i> 智能模板调用</li>
+                        <li><i class="fas fa-check"></i> 在线可视化设计</li>
+                        <li><i class="fas fa-check"></i> 云端协同与同步</li>
+                        <li><i class="fas fa-check"></i> 3D预览与模拟飞行</li>
+                    </ul>
+                    
+                    <a href="hangji.html" class="card-button">进入航迹大师</a>
+                </div>
+                
+                <!-- 巡检大师卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h2 class="card-title">巡检大师</h2>
+                    <p class="card-desc">面向特定行业的自动化、精细化设备设施巡检与分析平台，实现从数据采集到报告生成的全套解决方案。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 视频地理投射</li>
+                        <li><i class="fas fa-check"></i> 视频内业测图</li>
+                        <li><i class="fas fa-check"></i> AI识别与可视化</li>
+                        <li><i class="fas fa-check"></i> 增强现实叠加</li>
+                        <li><i class="fas fa-check"></i> 多行业应用场景</li>
+                    </ul>
+                    
+                    <a href="xunjian.html" class="card-button">进入巡检大师</a>
+                </div>
+                
+                <!-- 数据空间卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h2 class="card-title">数据空间</h2>
+                    <p class="card-desc">核心数据仓库与可视化中心，统一管理和展示所有数据，支持多期数据对比和三维模型浏览。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 模型发布与管理</li>
+                        <li><i class="fas fa-check"></i> 航线模拟与校验</li>
+                        <li><i class="fas fa-check"></i> 多源数据管理</li>
+                        <li><i class="fas fa-check"></i> 多期数据对比</li>
+                        <li><i class="fas fa-check"></i> 双屏显示与卷帘分析</li>
+                    </ul>
+                    
+                    <a href="data-space.html" class="card-button">进入数据空间</a>
+                </div>
+                
+                <!-- 云服务卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h2 class="card-title">云服务</h2>
+                    <p class="card-desc">基于云计算的一站式服务，提供工具下载、数据同步和云端重建功能，大幅降低技术门槛和使用成本。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 工具与资源获取</li>
+                        <li><i class="fas fa-check"></i> 无线数据同步</li>
+                        <li><i class="fas fa-check"></i> 云端重建服务</li>
+                        <li><i class="fas fa-check"></i> 多设备协同</li>
+                        <li><i class="fas fa-check"></i> 按需使用算力</li>
+                    </ul>
+                    
+                    <a href="yunfuwu.html" class="card-button">进入云服务</a>
+                </div>
+                
+                <!-- 双屏对比卡片 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h2 class="card-title">双屏对比</h2>
+                    <p class="card-desc">专注于精准对比分析的可视化工具，提供同步双屏对比和卷帘分析，实现像素级的精准比对。</p>
+                    
+                    <ul class="card-features">
+                        <li><i class="fas fa-check"></i> 同步双屏对比</li>
+                        <li><i class="fas fa-check"></i> 直观卷帘分析</li>
+                        <li><i class="fas fa-check"></i> 变化检测与测量</li>
+                        <li><i class="fas fa-check"></i> 多期数据比对</li>
+                        <li><i class="fas fa-check"></i> 专业分析报告</li>
+                    </ul>
+                    
+                    <a href="shuangping.html" class="card-button">进入双屏对比</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        
+        document.querySelectorAll('.logo').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        
+        document.querySelectorAll('.plat').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+
+        document.querySelectorAll('.sub-intro').forEach(card => {
+            card.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                window.location.href = page;
+            });
+        });
+        // 简单的页面交互
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为卡片添加点击效果
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // 在实际应用中，这里会有更复杂的页面跳转逻辑
+                    console.log(`点击了 ${this.querySelector('.card-title').textContent} 卡片`);
+                });
+            });
+            
+            // 模拟消息通知
+            document.querySelector('.notification-center').addEventListener('click', function() {
+                alert('您有3条新消息\n- 航迹规划完成通知\n- 巡检报告已生成\n- 系统维护提醒');
+            });
+            
+            // 用户设置点击
+            document.querySelector('.user-settings').addEventListener('click', function() {
+                alert('打开用户设置面板');
+            });
+        });
+    </script>
+</body>
+</html>
